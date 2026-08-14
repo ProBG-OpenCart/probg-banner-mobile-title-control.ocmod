@@ -1,0 +1,29 @@
+# Changelog
+
+All notable changes to **ProBG Banner Mobile & Title Control** are documented in this file.
+
+The project uses the following change categories:
+
+- `feat` — new functionality or a new capability;
+- `fix` — bug fixes and corrections to existing functionality.
+
+Every released version must have its own changelog entry. Versions follow Semantic Versioning:
+
+- `PATCH` (`1.0.0` → `1.0.1`) for fixes only;
+- `MINOR` (`1.0.0` → `1.1.0`) for backward-compatible new functionality;
+- `MAJOR` (`1.x.x` → `2.0.0`) for breaking changes.
+
+## [1.0.0] - 2026-08-14
+
+### feat
+
+- Added a separate mobile image field for every standard OpenCart banner image and language.
+- Added configurable mobile width and mobile height to every standard Banner module instance.
+- Added a `Hide Title` option for every banner image.
+- Added responsive storefront output based on HTML `<picture>` and a mobile `<source>` for viewports up to `767px`.
+- Added fallback to the desktop image when no mobile image is configured.
+- Added fallback to desktop width and height when mobile dimensions are missing from an existing Banner module instance.
+- Preserved the original banner title as image `alt` text when the visible title is hidden.
+- Added installation logic for the `mobile_image` and `hide_title` fields in the standard `banner_image` table.
+- Added Bulgarian and English administration language files.
+- Added Bulgarian and English project documentation.
