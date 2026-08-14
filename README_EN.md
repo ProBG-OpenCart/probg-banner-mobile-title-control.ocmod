@@ -8,6 +8,8 @@ Bulgarian documentation: [README.md](README.md)
 
 Current version: **1.0.0**
 
+Release history is maintained in [CHANGELOG.md](CHANGELOG.md).
+
 ## Compatibility
 
 The extension is designed for OpenCart 3 and follows the standard banner structure used by:
@@ -124,6 +126,7 @@ The extension uses the following fallback rules:
 
 ```text
 install.xml
+CHANGELOG.md
 upload/
   admin/
     controller/extension/module/probg_banner_mobile.php
@@ -177,6 +180,28 @@ When upgrading:
 3. reinstall the helper module only when a release contains database upgrade logic.
 
 Mobile-image and Hide Title data are preserved.
+
+## Changelog and versioning
+
+Every released version must have its own entry in [CHANGELOG.md](CHANGELOG.md).
+
+The following categories are used:
+
+- `feat` — new functionality or capability;
+- `fix` — a bug fix or correction to existing functionality.
+
+The same prefixes are used for commit messages, for example:
+
+```text
+feat: add configurable mobile breakpoint
+fix: preserve mobile image when editing a banner
+```
+
+Versions follow Semantic Versioning:
+
+- PATCH — fixes only, for example `1.0.0` → `1.0.1`;
+- MINOR — backward-compatible new functionality, for example `1.0.0` → `1.1.0`;
+- MAJOR — breaking changes, for example `1.x.x` → `2.0.0`.
 
 ## Author
 
