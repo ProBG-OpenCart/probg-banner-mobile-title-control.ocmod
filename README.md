@@ -8,6 +8,8 @@ English documentation: [README_EN.md](README_EN.md)
 
 Текуща версия: **1.0.0**
 
+Историята на промените по версии се поддържа в [CHANGELOG.md](CHANGELOG.md).
+
 ## Съвместимост
 
 Разширението е разработено за OpenCart 3 и е съобразено със стандартната структура на:
@@ -124,6 +126,7 @@ hide_title TINYINT(1)
 
 ```text
 install.xml
+CHANGELOG.md
 upload/
   admin/
     controller/extension/module/probg_banner_mobile.php
@@ -177,6 +180,28 @@ catalog/view/theme/default/template/extension/module/banner.twig
 3. при необходимост преинсталирайте helper модула само ако версията съдържа DB upgrade логика.
 
 Данните за mobile изображенията и Hide Title се запазват.
+
+## Changelog и версии
+
+Всяка публикувана версия трябва да има отделен запис в [CHANGELOG.md](CHANGELOG.md).
+
+Използват се следните категории:
+
+- `feat` — нова възможност или функционалност;
+- `fix` — корекция на грешка или съществуваща функционалност.
+
+Същите префикси се използват и в commit съобщенията, например:
+
+```text
+feat: add configurable mobile breakpoint
+fix: preserve mobile image when editing a banner
+```
+
+Версиите следват Semantic Versioning:
+
+- PATCH — само корекции, например `1.0.0` → `1.0.1`;
+- MINOR — нови обратно съвместими възможности, например `1.0.0` → `1.1.0`;
+- MAJOR — несъвместими промени, например `1.x.x` → `2.0.0`.
 
 ## Автор
 
