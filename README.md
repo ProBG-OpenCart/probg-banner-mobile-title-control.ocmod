@@ -79,7 +79,7 @@ hide_title TINYINT(1)
 
 ## Инсталация
 
-1. Изтеглете или изградете пакет `probg-banner-mobile-title-control.ocmod.zip`.
+1. Изтеглете готовия пакет `probg-banner-mobile-title-control-1.0.0-beta.ocmod.zip`.
 2. В администрацията на OpenCart отворете **Extensions → Installer**.
 3. Качете OCMOD пакета.
 4. Отворете **Extensions → Extensions** и изберете тип **Modules**.
@@ -207,3 +207,9 @@ fix: preserve mobile image when editing a banner
 
 **ProBG**  
 https://probg.com/
+
+## Подкрепете разработката
+
+Ако модулът ви е полезен, можете да подкрепите неговата разработка чрез Revolut:
+
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-Revolut-0075EB?style=for-the-badge&logo=revolut&logoColor=white)](https://revolut.me/vtotev)

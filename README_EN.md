@@ -79,7 +79,7 @@ These columns are intentionally preserved during uninstall so mobile-image selec
 
 ## Installation
 
-1. Download or build `probg-banner-mobile-title-control.ocmod.zip`.
+1. Download the ready-to-install `probg-banner-mobile-title-control-1.0.0-beta.ocmod.zip` package.
 2. In OpenCart admin, open **Extensions → Installer**.
 3. Upload the OCMOD package.
 4. Open **Extensions → Extensions** and select **Modules**.
@@ -207,3 +207,9 @@ Versions follow Semantic Versioning:
 
 **ProBG**  
 https://probg.com/
+
+## Support development
+
+If this module is useful to you, you can support its development through Revolut:
+
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-Revolut-0075EB?style=for-the-badge&logo=revolut&logoColor=white)](https://revolut.me/vtotev)
