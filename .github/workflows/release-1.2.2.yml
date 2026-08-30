@@ -1,0 +1,93 @@
+name: Release 1.2.2
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/release-1.2.2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate version
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '<version>1.2.2</version>' install.xml
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          ET.parse('install.xml')
+          PY
+
+      - name: Build OCMOD package
+        shell: bash
+        run: |
+          set -euo pipefail
+          PACKAGE='probg-banner-mobile-title-control-1.2.2.ocmod.zip'
+          mkdir -p dist
+          rm -f "dist/$PACKAGE"
+          zip -r "dist/$PACKAGE" install.xml upload -x '*.DS_Store'
+
+          sha256sum "dist/$PACKAGE" > /tmp/newsum
+          touch dist/SHA256SUMS
+          grep -v "  $PACKAGE$" dist/SHA256SUMS > /tmp/sums || true
+          cat /tmp/sums /tmp/newsum > dist/SHA256SUMS
+
+      - name: Commit release package
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dist/
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: release 1.2.2 package'
+            git push origin HEAD:main
+          fi
+
+      - name: Create tag and GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --tags
+          git reset --hard origin/main
+
+          TAG='v1.2.2'
+          PACKAGE='dist/probg-banner-mobile-title-control-1.2.2.ocmod.zip'
+
+          if ! git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
+            git tag "$TAG" HEAD
+            git push origin "$TAG"
+          fi
+
+          cat > /tmp/release-notes.md <<'EOF'
+          # ProBG Banner Mobile & Title Control 1.2.2
+
+          ## fix
+
+          - Fixed Mobile Width and Mobile Height values appearing to reset after saving Banner, Carousel, or Slideshow module instances.
+          - Reworked the admin-controller OCMOD anchors that restore saved mobile dimensions from module settings.
+          - Mobile dimension values are populated using submitted POST values first, then saved module settings, then desktop Width/Height as fallback.
+          - Improved compatibility with other OpenCart OCMOD/admin customizations by using more stable controller anchors.
+          EOF
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$PACKAGE" --clobber
+            gh release edit "$TAG" --title '1.2.2' --notes-file /tmp/release-notes.md
+          else
+            gh release create "$TAG" "$PACKAGE" --title '1.2.2' --notes-file /tmp/release-notes.md
+          fi
