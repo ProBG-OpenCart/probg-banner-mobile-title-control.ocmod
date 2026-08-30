@@ -159,21 +159,129 @@ catalog/view/theme/default/template/extension/module/banner.twig
 
 ## Custom теми
 
-OCMOD промяната на storefront template е насочена към стандартната тема:
+OCMOD промяната на storefront шаблона е насочена само към стандартната тема:
 
 ```text
 catalog/view/theme/default/template/extension/module/banner.twig
 ```
 
-Ако активната тема има собствен `extension/module/banner.twig`, той трябва да бъде адаптиран да използва:
+Ако активната тема има собствен Banner template, OpenCart зарежда него и промяната по `default` темата няма да се вижда. Най-често файлът е:
 
-- `banner.image`
-- `banner.mobile_image`
-- `banner.title`
-- `banner.alt`
-- `banner.hide_title`
+```text
+catalog/view/theme/ИМЕ-НА-ТЕМАТА/template/extension/module/banner.twig
+```
 
-Препоръчителният подход е `<picture>` с `<source media="(max-width: 767px)">`.
+Frontend контролерът на модула вече подава необходимите данни независимо коя тема е активна:
+
+- `banner.image` — desktop изображение;
+- `banner.mobile_image` — mobile изображение;
+- `banner.title` — заглавие за визуализиране; празно е при включено **Hide Title**;
+- `banner.alt` — оригиналното заглавие, използвано за `alt` текста;
+- `banner.hide_title` — `1`, когато **Hide Title** е включено.
+
+### Ръчна корекция на custom тема
+
+Отворете:
+
+```text
+catalog/view/theme/ИМЕ-НА-ТЕМАТА/template/extension/module/banner.twig
+```
+
+Намерете HTML кода, който визуализира изображението на всеки банер. При стандартна или близка до стандартната тема той обикновено изглежда подобно на:
+
+```twig
+<div class="swiper-slide">
+  {% if banner.link %}
+    <a href="{{ banner.link }}">
+      <img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" />
+    </a>
+  {% else %}
+    <img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" />
+  {% endif %}
+</div>
+```
+
+Заменете само частта за изображението с responsive `<picture>` вариант:
+
+```twig
+<div class="swiper-slide">
+  {% if banner.link %}<a href="{{ banner.link }}">{% endif %}
+
+  <picture style="display:block">
+    {% if banner.mobile_image %}
+      <source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}" />
+    {% endif %}
+    <img src="{{ banner.image }}" alt="{{ banner.alt }}" class="img-responsive" />
+  </picture>
+
+  {% if banner.link %}</a>{% endif %}
+</div>
+```
+
+Така:
+
+- до `767px` браузърът използва `banner.mobile_image`;
+- над `767px` използва `banner.image`;
+- ако няма мобилно изображение, контролерът вече подава desktop изображението като fallback;
+- `alt` остава наличен чрез `banner.alt`, дори когато заглавието е скрито.
+
+### Ако темата показва заглавието като текст
+
+Някои custom теми добавят видим caption, например:
+
+```twig
+<h3>{{ banner.title }}</h3>
+```
+
+За да работи **Скрий заглавие**, използвайте условие:
+
+```twig
+{% if banner.title and not banner.hide_title %}
+  <h3>{{ banner.title }}</h3>
+{% endif %}
+```
+
+Тъй като модулът подава празен `banner.title` при включено **Hide Title**, при повечето теми е достатъчна и проверка само за `banner.title`:
+
+```twig
+{% if banner.title %}
+  <h3>{{ banner.title }}</h3>
+{% endif %}
+```
+
+### Теми с lazy loading или различен HTML
+
+Ако темата използва `data-src`, `data-srcset`, `loading="lazy"`, `img-fluid`, собствени slider класове или JavaScript lazy loader, не заменяйте механично целия `<div class="swiper-slide">`. Запазете markup-а и класовете на темата и добавете само логиката за:
+
+```twig
+banner.mobile_image
+banner.image
+banner.alt
+banner.hide_title
+```
+
+При `<picture>` mobile source може да се добави по следния начин:
+
+```twig
+<picture>
+  {% if banner.mobile_image %}
+    <source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}" />
+  {% endif %}
+  <img src="{{ banner.image }}" alt="{{ banner.alt }}" />
+</picture>
+```
+
+Ако custom темата използва собствен breakpoint, например `576px`, `768px` или `992px`, можете да промените `(max-width: 767px)` според responsive логиката на темата.
+
+### След ръчната промяна
+
+1. Запазете `banner.twig` на активната тема.
+2. Отворете **Extensions → Modifications** и натиснете **Refresh**.
+3. Изчистете Theme cache от Developer Settings.
+4. Ако темата има собствен cache, изчистете и него.
+5. Проверете началната страница на desktop и при viewport под зададения mobile breakpoint.
+
+Важно: при обновяване на custom тема ръчно направената промяна в нейния `banner.twig` може да бъде презаписана. След update на темата проверете отново файла.
 
 ## Обновяване
 
