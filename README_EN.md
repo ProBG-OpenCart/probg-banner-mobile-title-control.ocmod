@@ -6,7 +6,7 @@ Bulgarian documentation: [README.md](README.md)
 
 ## Version
 
-Current version: **1.0.0**
+Current version: **1.0.1**
 
 Release history is maintained in [CHANGELOG.md](CHANGELOG.md).
 
@@ -68,24 +68,28 @@ The browser chooses the appropriate source without JavaScript device detection.
 
 ## Database changes
 
-During installation the extension adds the following fields to the standard `banner_image` table:
+The extension uses the following additional fields in the standard `banner_image` table:
 
 ```text
 mobile_image VARCHAR(255)
 hide_title TINYINT(1)
 ```
 
+Starting with version **1.0.1**, the schema is checked automatically before a banner is created or edited. If either column is missing, it is created before the banner data is written. This prevents the `Unknown column 'mobile_image' in 'INSERT INTO'` error even when the OCMOD modification becomes active before the helper module install method has run.
+
 These columns are intentionally preserved during uninstall so mobile-image selections and title-visibility settings are not lost during reinstall or upgrade.
 
 ## Installation
 
-1. Download the ready-to-install `probg-banner-mobile-title-control-1.0.0-beta.ocmod.zip` package.
+1. Download the ready-to-install `.ocmod.zip` package for the current version.
 2. In OpenCart admin, open **Extensions → Installer**.
 3. Upload the OCMOD package.
 4. Open **Extensions → Extensions** and select **Modules**.
-5. Install **ProBG Banner Mobile & Title Control**.
+5. Installing **ProBG Banner Mobile & Title Control** is still recommended so the DB migration runs immediately.
 6. Open **Extensions → Modifications** and click **Refresh**.
 7. If required, clear the Theme/SASS cache from Developer Settings.
+
+Starting with version 1.0.1, missing DB columns are also created automatically on the first banner create/edit operation.
 
 ## Usage
 
@@ -177,7 +181,9 @@ When upgrading:
 
 1. upload the updated OCMOD package;
 2. refresh the modification cache;
-3. reinstall the helper module only when a release contains database upgrade logic.
+3. reinstall the helper module when you want the migration to run immediately.
+
+Starting with 1.0.1, missing `mobile_image` and `hide_title` columns are also checked and created automatically before a banner write.
 
 Mobile-image and Hide Title data are preserved.
 
