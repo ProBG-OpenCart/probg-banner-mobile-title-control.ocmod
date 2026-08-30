@@ -1,0 +1,96 @@
+name: Apply Banner Link Title Feature
+
+on:
+  push:
+    branches:
+      - agent/feat-link-title
+    paths:
+      - '.github/workflows/feat-link-title.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/feat-link-title
+          fetch-depth: 0
+
+      - name: Apply 1.1.0 feature changes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          install = Path('install.xml')
+          text = install.read_text(encoding='utf-8')
+          text = text.replace('<version>1.0.3</version>', '<version>1.1.0</version>', 1)
+          old = '{% if banner.link %}<a href="{{ banner.link }}">{% endif %}'
+          new = '{% if banner.link %}<a href="{{ banner.link }}"{% if banner.title %} title="{{ banner.title }}"{% endif %}>{% endif %}'
+          if old not in text:
+              raise SystemExit('Default banner link markup not found in install.xml')
+          text = text.replace(old, new, 1)
+          install.write_text(text, encoding='utf-8')
+
+          changelog = Path('CHANGELOG.md')
+          text = changelog.read_text(encoding='utf-8')
+          marker = '## [1.0.3] - 2026-08-30'
+          entry = '''## [1.1.0] - 2026-08-30\n\n### feat\n\n- Added a conditional HTML `title` attribute to banner links using `banner.title`.\n- The link `title` attribute is omitted automatically when **Hide Title** is enabled because `banner.title` is empty.\n- Updated the custom-theme integration examples to use the same conditional link-title logic.\n\n'''
+          if '## [1.1.0] - 2026-08-30' not in text:
+              if marker not in text:
+                  raise SystemExit('Changelog insertion marker not found')
+              text = text.replace(marker, entry + marker, 1)
+          changelog.write_text(text, encoding='utf-8')
+
+          replacements = {
+              'README.md': [
+                  ('Текуща версия: **1.0.3**', 'Текуща версия: **1.1.0**'),
+                  ('{% if banner.link %}<a href="{{ banner.link }}">{% endif %}', '{% if banner.link %}<a href="{{ banner.link }}"{% if banner.title %} title="{{ banner.title }}"{% endif %}>{% endif %}'),
+              ],
+              'README_EN.md': [
+                  ('Current version: **1.0.3**', 'Current version: **1.1.0**'),
+                  ('{% if banner.link %}<a href="{{ banner.link }}">{% endif %}', '{% if banner.link %}<a href="{{ banner.link }}"{% if banner.title %} title="{{ banner.title }}"{% endif %}>{% endif %}'),
+              ],
+          }
+
+          for filename, pairs in replacements.items():
+              path = Path(filename)
+              text = path.read_text(encoding='utf-8')
+              for old, new in pairs:
+                  if old not in text:
+                      raise SystemExit(f'Required text not found in {filename}: {old}')
+                  text = text.replace(old, new)
+              path.write_text(text, encoding='utf-8')
+
+          # Add a concise explanation next to the custom-theme example.
+          bg = Path('README.md')
+          text = bg.read_text(encoding='utf-8')
+          marker = 'Така:\n\n- до `767px` браузърът използва `banner.mobile_image`;'
+          note = 'Ако банерът има линк и **Скрий заглавие** не е включено, линкът получава и `title="{{ banner.title }}"`. При скрито заглавие атрибутът не се добавя.\n\n'
+          if note not in text and marker in text:
+              text = text.replace(marker, note + marker, 1)
+          bg.write_text(text, encoding='utf-8')
+
+          en = Path('README_EN.md')
+          text = en.read_text(encoding='utf-8')
+          marker = 'This means:\n\n- up to `767px`, the browser uses `banner.mobile_image`;'
+          note = 'When a banner has a link and **Hide Title** is not enabled, the link also receives `title="{{ banner.title }}"`. When the title is hidden, the attribute is omitted.\n\n'
+          if note not in text and marker in text:
+              text = text.replace(marker, note + marker, 1)
+          en.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Remove one-shot workflow
+        run: rm -f .github/workflows/feat-link-title.yml
+
+      - name: Commit feature changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add install.xml CHANGELOG.md README.md README_EN.md .github/workflows/feat-link-title.yml
+          git commit -m 'feat: add title attribute to banner links'
+          git push origin HEAD:agent/feat-link-title
