@@ -6,7 +6,7 @@ English documentation: [README_EN.md](README_EN.md)
 
 ## Версия
 
-Текуща версия: **1.0.3**
+Текуща версия: **1.1.0**
 
 Историята на промените по версии се поддържа в [CHANGELOG.md](CHANGELOG.md).
 
@@ -205,7 +205,7 @@ catalog/view/theme/ИМЕ-НА-ТЕМАТА/template/extension/module/banner.twi
 
 ```twig
 <div class="swiper-slide">
-  {% if banner.link %}<a href="{{ banner.link }}">{% endif %}
+  {% if banner.link %}<a href="{{ banner.link }}"{% if banner.title %} title="{{ banner.title }}"{% endif %}>{% endif %}
 
   <picture style="display:block">
     {% if banner.mobile_image %}
@@ -217,6 +217,8 @@ catalog/view/theme/ИМЕ-НА-ТЕМАТА/template/extension/module/banner.twi
   {% if banner.link %}</a>{% endif %}
 </div>
 ```
+
+Ако банерът има линк и **Скрий заглавие** не е включено, линкът получава и `title="{{ banner.title }}"`. При скрито заглавие атрибутът не се добавя.
 
 Така:
 

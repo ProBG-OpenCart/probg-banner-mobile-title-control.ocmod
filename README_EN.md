@@ -6,7 +6,7 @@ Bulgarian documentation: [README.md](README.md)
 
 ## Version
 
-Current version: **1.0.3**
+Current version: **1.1.0**
 
 Release history is maintained in [CHANGELOG.md](CHANGELOG.md).
 
@@ -205,7 +205,7 @@ Replace only the image portion with a responsive `<picture>` implementation:
 
 ```twig
 <div class="swiper-slide">
-  {% if banner.link %}<a href="{{ banner.link }}">{% endif %}
+  {% if banner.link %}<a href="{{ banner.link }}"{% if banner.title %} title="{{ banner.title }}"{% endif %}>{% endif %}
 
   <picture style="display:block">
     {% if banner.mobile_image %}
