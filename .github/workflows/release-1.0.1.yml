@@ -1,0 +1,80 @@
+name: Release 1.0.1
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/release-1.0.1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build versioned OCMOD package
+        run: |
+          VERSION='1.0.1'
+          PACKAGE="probg-banner-mobile-title-control-${VERSION}.ocmod.zip"
+          mkdir -p dist
+          rm -f "dist/${PACKAGE}"
+          zip -r "dist/${PACKAGE}" install.xml upload -x '*.DS_Store'
+          sha256sum dist/*.ocmod.zip > dist/SHA256SUMS
+
+      - name: Commit dist package
+        run: |
+          if git diff --quiet -- dist/ && git diff --cached --quiet -- dist/; then
+            echo 'No dist changes to commit.'
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add dist/
+            git commit -m 'build: add 1.0.1 installation package'
+            git push origin HEAD:main
+          fi
+
+      - name: Create tag and GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG='v1.0.1'
+          PACKAGE='dist/probg-banner-mobile-title-control-1.0.1.ocmod.zip'
+
+          git fetch origin main --tags
+          git checkout main
+          git reset --hard origin/main
+
+          if ! git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
+            git tag "$TAG" HEAD
+            git push origin "$TAG"
+          fi
+
+          cat > /tmp/release-notes.md <<'EOF'
+          # ProBG Banner Mobile & Title Control 1.0.1
+
+          ## fix
+
+          - Fixed `Unknown column 'mobile_image' in 'INSERT INTO'` when OCMOD is active before the helper module installation has created the required database columns.
+          - Added automatic schema validation before both banner creation and banner editing.
+          - Automatically creates `mobile_image` and `hide_title` in `banner_image` when they are missing.
+          - Updated Bulgarian and English documentation for the safer upgrade/install flow.
+
+          This release supersedes the 1.0.0 beta for testing and installation.
+          EOF
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$PACKAGE" --clobber
+          else
+            gh release create "$TAG" "$PACKAGE" \
+              --title '1.0.1' \
+              --notes-file /tmp/release-notes.md
+          fi
