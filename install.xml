@@ -2,523 +2,481 @@
 <modification>
   <name>ProBG Banner Mobile &amp; Title Control</name>
   <code>probg_banner_mobile_title_control</code>
-  <version>1.2.1</version>
+  <version>1.2.2</version>
   <author>ProBG</author>
   <link>https://probg.com/</link>
-
-  <!-- Persist mobile image and hide-title flag in the standard banner_image table. -->
   <file path="admin/model/design/banner.php">
-    <!-- 1.0.1: self-heal the database schema before any banner write. -->
     <operation>
-      <search><![CDATA[public function addBanner($data) {]]></search>
-      <add position="after"><![CDATA[
-		$this->ensureProbgBannerColumns();]]></add>
+      <search>public function addBanner($data) {</search>
+      <add position="after">
+		$this-&gt;ensureProbgBannerColumns();</add>
     </operation>
     <operation>
-      <search><![CDATA[public function editBanner($banner_id, $data) {]]></search>
-      <add position="after"><![CDATA[
-		$this->ensureProbgBannerColumns();]]></add>
+      <search>public function editBanner($banner_id, $data) {</search>
+      <add position="after">
+		$this-&gt;ensureProbgBannerColumns();</add>
     </operation>
     <operation>
-      <search><![CDATA[public function getTotalBanners() {]]></search>
-      <add position="before"><![CDATA[
+      <search>public function getTotalBanners() {</search>
+      <add position="before">
 	private function ensureProbgBannerColumns() {
-		$mobile_image = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "banner_image` LIKE 'mobile_image'");
+		$mobile_image = $this-&gt;db-&gt;query("SHOW COLUMNS FROM `" . DB_PREFIX . "banner_image` LIKE 'mobile_image'");
 
-		if (!$mobile_image->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "banner_image` ADD `mobile_image` VARCHAR(255) NOT NULL DEFAULT '' AFTER `image`");
+		if (!$mobile_image-&gt;num_rows) {
+			$this-&gt;db-&gt;query("ALTER TABLE `" . DB_PREFIX . "banner_image` ADD `mobile_image` VARCHAR(255) NOT NULL DEFAULT '' AFTER `image`");
 		}
 
-		$hide_title = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "banner_image` LIKE 'hide_title'");
+		$hide_title = $this-&gt;db-&gt;query("SHOW COLUMNS FROM `" . DB_PREFIX . "banner_image` LIKE 'hide_title'");
 
-		if (!$hide_title->num_rows) {
-			$this->db->query("ALTER TABLE `" . DB_PREFIX . "banner_image` ADD `hide_title` TINYINT(1) NOT NULL DEFAULT '0' AFTER `mobile_image`");
+		if (!$hide_title-&gt;num_rows) {
+			$this-&gt;db-&gt;query("ALTER TABLE `" . DB_PREFIX . "banner_image` ADD `hide_title` TINYINT(1) NOT NULL DEFAULT '0' AFTER `mobile_image`");
 		}
 	}
 
-]]></add>
+</add>
     </operation>
     <operation>
-      <search><![CDATA[image = '" .  $this->db->escape($banner_image['image']) . "', sort_order = '" .  (int)$banner_image['sort_order']]]></search>
-      <add position="replace"><![CDATA[image = '" .  $this->db->escape($banner_image['image']) . "', mobile_image = '" . $this->db->escape(isset($banner_image['mobile_image']) ? $banner_image['mobile_image'] : '') . "', hide_title = '" . (int)(isset($banner_image['hide_title']) ? $banner_image['hide_title'] : 0) . "', sort_order = '" .  (int)$banner_image['sort_order']]]></add>
+      <search>image = '" .  $this-&gt;db-&gt;escape($banner_image['image']) . "', sort_order = '" .  (int)$banner_image['sort_order']</search>
+      <add position="replace">image = '" .  $this-&gt;db-&gt;escape($banner_image['image']) . "', mobile_image = '" . $this-&gt;db-&gt;escape(isset($banner_image['mobile_image']) ? $banner_image['mobile_image'] : '') . "', hide_title = '" . (int)(isset($banner_image['hide_title']) ? $banner_image['hide_title'] : 0) . "', sort_order = '" .  (int)$banner_image['sort_order']</add>
     </operation>
     <operation>
-      <search><![CDATA[image = '" .  $this->db->escape($banner_image['image']) . "', sort_order = '" . (int)$banner_image['sort_order']]]></search>
-      <add position="replace"><![CDATA[image = '" .  $this->db->escape($banner_image['image']) . "', mobile_image = '" . $this->db->escape(isset($banner_image['mobile_image']) ? $banner_image['mobile_image'] : '') . "', hide_title = '" . (int)(isset($banner_image['hide_title']) ? $banner_image['hide_title'] : 0) . "', sort_order = '" . (int)$banner_image['sort_order']]]></add>
+      <search>image = '" .  $this-&gt;db-&gt;escape($banner_image['image']) . "', sort_order = '" . (int)$banner_image['sort_order']</search>
+      <add position="replace">image = '" .  $this-&gt;db-&gt;escape($banner_image['image']) . "', mobile_image = '" . $this-&gt;db-&gt;escape(isset($banner_image['mobile_image']) ? $banner_image['mobile_image'] : '') . "', hide_title = '" . (int)(isset($banner_image['hide_title']) ? $banner_image['hide_title'] : 0) . "', sort_order = '" . (int)$banner_image['sort_order']</add>
     </operation>
     <operation>
-      <search><![CDATA['image'      => $banner_image['image'],]]></search>
-      <add position="after"><![CDATA[
-				'mobile_image' => isset($banner_image['mobile_image']) ? $banner_image['mobile_image'] : '',
-				'hide_title'   => isset($banner_image['hide_title']) ? (int)$banner_image['hide_title'] : 0,]]></add>
+      <search>'image'      =&gt; $banner_image['image'],</search>
+      <add position="after">
+				'mobile_image' =&gt; isset($banner_image['mobile_image']) ? $banner_image['mobile_image'] : '',
+				'hide_title'   =&gt; isset($banner_image['hide_title']) ? (int)$banner_image['hide_title'] : 0,</add>
     </operation>
   </file>
-
-  <!-- Prepare mobile thumbnails and hide-title state in Design > Banners. -->
   <file path="admin/controller/design/banner.php">
     <operation>
-      <search><![CDATA[protected function getForm() {]]></search>
-      <add position="after"><![CDATA[
-		$this->load->language('extension/module/probg_banner_mobile_fields');]]></add>
+      <search>protected function getForm() {</search>
+      <add position="after">
+		$this-&gt;load-&gt;language('extension/module/probg_banner_mobile_fields');</add>
     </operation>
     <operation>
-      <search><![CDATA[				} else {
+      <search>				} else {
 					$image = '';
 					$thumb = 'no_image.png';
-				}]]></search>
-      <add position="after"><![CDATA[
+				}</search>
+      <add position="after">
 
-				if (!empty($banner_image['mobile_image']) && is_file(DIR_IMAGE . $banner_image['mobile_image'])) {
+				if (!empty($banner_image['mobile_image']) &amp;&amp; is_file(DIR_IMAGE . $banner_image['mobile_image'])) {
 					$mobile_image = $banner_image['mobile_image'];
 					$mobile_thumb = $banner_image['mobile_image'];
 				} else {
 					$mobile_image = '';
 					$mobile_thumb = 'no_image.png';
-				}]]></add>
+				}</add>
     </operation>
     <operation>
-      <search><![CDATA['thumb'      => $this->model_tool_image->resize($thumb, 100, 100),]]></search>
-      <add position="after"><![CDATA[
-					'mobile_image' => $mobile_image,
-					'mobile_thumb' => $this->model_tool_image->resize($mobile_thumb, 100, 100),
-					'hide_title'   => !empty($banner_image['hide_title']) ? 1 : 0,]]></add>
+      <search>'thumb'      =&gt; $this-&gt;model_tool_image-&gt;resize($thumb, 100, 100),</search>
+      <add position="after">
+					'mobile_image' =&gt; $mobile_image,
+					'mobile_thumb' =&gt; $this-&gt;model_tool_image-&gt;resize($mobile_thumb, 100, 100),
+					'hide_title'   =&gt; !empty($banner_image['hide_title']) ? 1 : 0,</add>
     </operation>
   </file>
-
-  <!-- Add Mobile Image and Hide Title controls to each banner row. -->
   <file path="admin/view/template/design/banner_form.twig">
     <operation>
-      <search><![CDATA[<td class="text-center">{{ entry_image }}</td>]]></search>
-      <add position="after"><![CDATA[
-                    <td class="text-center">{{ entry_mobile_image }}</td>
-                    <td class="text-center"><span data-toggle="tooltip" title="{{ help_hide_title }}">{{ entry_hide_title }}</span></td>]]></add>
+      <search>&lt;td class="text-center"&gt;{{ entry_image }}&lt;/td&gt;</search>
+      <add position="after">
+                    &lt;td class="text-center"&gt;{{ entry_mobile_image }}&lt;/td&gt;
+                    &lt;td class="text-center"&gt;&lt;span data-toggle="tooltip" title="{{ help_hide_title }}"&gt;{{ entry_hide_title }}&lt;/span&gt;&lt;/td&gt;</add>
     </operation>
     <operation>
-      <search><![CDATA[<input type="hidden" name="banner_image[{{ language.language_id }}][{{ image_row }}][image]" value="{{ banner_image.image }}" id="input-image{{ image_row }}" /></td>]]></search>
-      <add position="after"><![CDATA[
-                    <td class="text-center"><a href="" id="thumb-mobile-image{{ image_row }}" data-toggle="image" class="img-thumbnail"><img src="{{ banner_image.mobile_thumb }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a>
-                      <input type="hidden" name="banner_image[{{ language.language_id }}][{{ image_row }}][mobile_image]" value="{{ banner_image.mobile_image }}" id="input-mobile-image{{ image_row }}" /></td>
-                    <td class="text-center"><input type="checkbox" name="banner_image[{{ language.language_id }}][{{ image_row }}][hide_title]" value="1"{% if banner_image.hide_title %} checked="checked"{% endif %} /></td>]]></add>
+      <search>&lt;input type="hidden" name="banner_image[{{ language.language_id }}][{{ image_row }}][image]" value="{{ banner_image.image }}" id="input-image{{ image_row }}" /&gt;&lt;/td&gt;</search>
+      <add position="after">
+                    &lt;td class="text-center"&gt;&lt;a href="" id="thumb-mobile-image{{ image_row }}" data-toggle="image" class="img-thumbnail"&gt;&lt;img src="{{ banner_image.mobile_thumb }}" alt="" title="" data-placeholder="{{ placeholder }}" /&gt;&lt;/a&gt;
+                      &lt;input type="hidden" name="banner_image[{{ language.language_id }}][{{ image_row }}][mobile_image]" value="{{ banner_image.mobile_image }}" id="input-mobile-image{{ image_row }}" /&gt;&lt;/td&gt;
+                    &lt;td class="text-center"&gt;&lt;input type="checkbox" name="banner_image[{{ language.language_id }}][{{ image_row }}][hide_title]" value="1"{% if banner_image.hide_title %} checked="checked"{% endif %} /&gt;&lt;/td&gt;</add>
     </operation>
     <operation>
-      <search><![CDATA[<td colspan="4"></td>]]></search>
-      <add position="replace"><![CDATA[<td colspan="6"></td>]]></add>
+      <search>&lt;td colspan="4"&gt;&lt;/td&gt;</search>
+      <add position="replace">&lt;td colspan="6"&gt;&lt;/td&gt;</add>
     </operation>
     <operation>
-      <search><![CDATA[html += '  <td class="text-center"><a href="" id="thumb-image' + image_row + '" data-toggle="image" class="img-thumbnail"><img src="{{ placeholder }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a><input type="hidden" name="banner_image[' + language_id + '][' + image_row + '][image]" value="" id="input-image' + image_row + '" /></td>';]]></search>
-      <add position="after"><![CDATA[
-	html += '  <td class="text-center"><a href="" id="thumb-mobile-image' + image_row + '" data-toggle="image" class="img-thumbnail"><img src="{{ placeholder }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a><input type="hidden" name="banner_image[' + language_id + '][' + image_row + '][mobile_image]" value="" id="input-mobile-image' + image_row + '" /></td>';
-	html += '  <td class="text-center"><input type="checkbox" name="banner_image[' + language_id + '][' + image_row + '][hide_title]" value="1" /></td>';]]></add>
+      <search>html += '  &lt;td class="text-center"&gt;&lt;a href="" id="thumb-image' + image_row + '" data-toggle="image" class="img-thumbnail"&gt;&lt;img src="{{ placeholder }}" alt="" title="" data-placeholder="{{ placeholder }}" /&gt;&lt;/a&gt;&lt;input type="hidden" name="banner_image[' + language_id + '][' + image_row + '][image]" value="" id="input-image' + image_row + '" /&gt;&lt;/td&gt;';</search>
+      <add position="after">
+	html += '  &lt;td class="text-center"&gt;&lt;a href="" id="thumb-mobile-image' + image_row + '" data-toggle="image" class="img-thumbnail"&gt;&lt;img src="{{ placeholder }}" alt="" title="" data-placeholder="{{ placeholder }}" /&gt;&lt;/a&gt;&lt;input type="hidden" name="banner_image[' + language_id + '][' + image_row + '][mobile_image]" value="" id="input-mobile-image' + image_row + '" /&gt;&lt;/td&gt;';
+	html += '  &lt;td class="text-center"&gt;&lt;input type="checkbox" name="banner_image[' + language_id + '][' + image_row + '][hide_title]" value="1" /&gt;&lt;/td&gt;';</add>
     </operation>
   </file>
-
-  <!-- Extend Banner, Carousel and Slideshow module settings with mobile dimensions. -->
   <file path="admin/controller/extension/module/banner.php">
     <operation>
-      <search><![CDATA[$this->load->language('extension/module/banner');]]></search>
-      <add position="after"><![CDATA[
-		$this->load->language('extension/module/probg_banner_mobile_fields');]]></add>
+      <search>$this-&gt;load-&gt;language('extension/module/banner');</search>
+      <add position="after">
+		$this-&gt;load-&gt;language('extension/module/probg_banner_mobile_fields');</add>
     </operation>
     <operation>
-      <search><![CDATA[		if (isset($this->error['height'])) {
-			$data['error_height'] = $this->error['height'];
-		} else {
-			$data['error_height'] = '';
-		}]]></search>
-      <add position="after"><![CDATA[
+      <search>$data['breadcrumbs'] = array();</search>
+      <add position="before">
 
-		if (isset($this->error['mobile_width'])) {
-			$data['error_mobile_width'] = $this->error['mobile_width'];
+		if (isset($this-&gt;error['mobile_width'])) {
+			$data['error_mobile_width'] = $this-&gt;error['mobile_width'];
 		} else {
 			$data['error_mobile_width'] = '';
 		}
 
-		if (isset($this->error['mobile_height'])) {
-			$data['error_mobile_height'] = $this->error['mobile_height'];
+		if (isset($this-&gt;error['mobile_height'])) {
+			$data['error_mobile_height'] = $this-&gt;error['mobile_height'];
 		} else {
 			$data['error_mobile_height'] = '';
-		}]]></add>
+		}</add>
     </operation>
     <operation>
-      <search><![CDATA[		if (isset($this->request->post['status'])) {]]></search>
-      <add position="before"><![CDATA[
-		if (isset($this->request->post['mobile_width'])) {
-			$data['mobile_width'] = $this->request->post['mobile_width'];
-		} elseif (!empty($module_info) && !empty($module_info['mobile_width'])) {
+      <search>$data['header'] = $this-&gt;load-&gt;controller('common/header');</search>
+      <add position="before">
+		if (isset($this-&gt;request-&gt;post['mobile_width'])) {
+			$data['mobile_width'] = $this-&gt;request-&gt;post['mobile_width'];
+		} elseif (!empty($module_info) &amp;&amp; !empty($module_info['mobile_width'])) {
 			$data['mobile_width'] = $module_info['mobile_width'];
 		} else {
 			$data['mobile_width'] = $data['width'];
 		}
 
-		if (isset($this->request->post['mobile_height'])) {
-			$data['mobile_height'] = $this->request->post['mobile_height'];
-		} elseif (!empty($module_info) && !empty($module_info['mobile_height'])) {
+		if (isset($this-&gt;request-&gt;post['mobile_height'])) {
+			$data['mobile_height'] = $this-&gt;request-&gt;post['mobile_height'];
+		} elseif (!empty($module_info) &amp;&amp; !empty($module_info['mobile_height'])) {
 			$data['mobile_height'] = $module_info['mobile_height'];
 		} else {
 			$data['mobile_height'] = $data['height'];
 		}
 
-]]></add>
+</add>
     </operation>
     <operation>
-      <search><![CDATA[		if (!$this->request->post['height']) {
-			$this->error['height'] = $this->language->get('error_height');
-		}]]></search>
-      <add position="after"><![CDATA[
+      <search>return !$this-&gt;error;</search>
+      <add position="before">
 
-		if (empty($this->request->post['mobile_width']) || (int)$this->request->post['mobile_width'] < 1) {
-			$this->error['mobile_width'] = $this->language->get('error_mobile_width');
+		if (empty($this-&gt;request-&gt;post['mobile_width']) || (int)$this-&gt;request-&gt;post['mobile_width'] &lt; 1) {
+			$this-&gt;error['mobile_width'] = $this-&gt;language-&gt;get('error_mobile_width');
 		}
 
-		if (empty($this->request->post['mobile_height']) || (int)$this->request->post['mobile_height'] < 1) {
-			$this->error['mobile_height'] = $this->language->get('error_mobile_height');
-		}]]></add>
+		if (empty($this-&gt;request-&gt;post['mobile_height']) || (int)$this-&gt;request-&gt;post['mobile_height'] &lt; 1) {
+			$this-&gt;error['mobile_height'] = $this-&gt;language-&gt;get('error_mobile_height');
+		}</add>
     </operation>
   </file>
-
   <file path="admin/view/template/extension/module/banner.twig">
     <operation>
-      <search><![CDATA[</form>]]></search>
-      <add position="before"><![CDATA[
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-mobile-width">{{ entry_mobile_width }}</label>
-            <div class="col-sm-10">
-              <input type="text" name="mobile_width" value="{{ mobile_width }}" placeholder="{{ entry_mobile_width }}" id="input-mobile-width" class="form-control" />
+      <search>&lt;/form&gt;</search>
+      <add position="before">
+          &lt;div class="form-group required"&gt;
+            &lt;label class="col-sm-2 control-label" for="input-mobile-width"&gt;{{ entry_mobile_width }}&lt;/label&gt;
+            &lt;div class="col-sm-10"&gt;
+              &lt;input type="text" name="mobile_width" value="{{ mobile_width }}" placeholder="{{ entry_mobile_width }}" id="input-mobile-width" class="form-control" /&gt;
               {% if error_mobile_width %}
-              <div class="text-danger">{{ error_mobile_width }}</div>
+              &lt;div class="text-danger"&gt;{{ error_mobile_width }}&lt;/div&gt;
               {% endif %}
-            </div>
-          </div>
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-mobile-height">{{ entry_mobile_height }}</label>
-            <div class="col-sm-10">
-              <input type="text" name="mobile_height" value="{{ mobile_height }}" placeholder="{{ entry_mobile_height }}" id="input-mobile-height" class="form-control" />
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="form-group required"&gt;
+            &lt;label class="col-sm-2 control-label" for="input-mobile-height"&gt;{{ entry_mobile_height }}&lt;/label&gt;
+            &lt;div class="col-sm-10"&gt;
+              &lt;input type="text" name="mobile_height" value="{{ mobile_height }}" placeholder="{{ entry_mobile_height }}" id="input-mobile-height" class="form-control" /&gt;
               {% if error_mobile_height %}
-              <div class="text-danger">{{ error_mobile_height }}</div>
+              &lt;div class="text-danger"&gt;{{ error_mobile_height }}&lt;/div&gt;
               {% endif %}
-            </div>
-          </div>
-]]></add>
+            &lt;/div&gt;
+          &lt;/div&gt;
+</add>
     </operation>
   </file>
-
   <file path="admin/controller/extension/module/carousel.php">
     <operation>
-      <search><![CDATA[$this->load->language('extension/module/carousel');]]></search>
-      <add position="after"><![CDATA[
-		$this->load->language('extension/module/probg_banner_mobile_fields');]]></add>
+      <search>$this-&gt;load-&gt;language('extension/module/carousel');</search>
+      <add position="after">
+		$this-&gt;load-&gt;language('extension/module/probg_banner_mobile_fields');</add>
     </operation>
     <operation>
-      <search><![CDATA[		if (isset($this->error['height'])) {
-			$data['error_height'] = $this->error['height'];
-		} else {
-			$data['error_height'] = '';
-		}]]></search>
-      <add position="after"><![CDATA[
+      <search>$data['breadcrumbs'] = array();</search>
+      <add position="before">
 
-		if (isset($this->error['mobile_width'])) {
-			$data['error_mobile_width'] = $this->error['mobile_width'];
+		if (isset($this-&gt;error['mobile_width'])) {
+			$data['error_mobile_width'] = $this-&gt;error['mobile_width'];
 		} else {
 			$data['error_mobile_width'] = '';
 		}
 
-		if (isset($this->error['mobile_height'])) {
-			$data['error_mobile_height'] = $this->error['mobile_height'];
+		if (isset($this-&gt;error['mobile_height'])) {
+			$data['error_mobile_height'] = $this-&gt;error['mobile_height'];
 		} else {
 			$data['error_mobile_height'] = '';
-		}]]></add>
+		}</add>
     </operation>
     <operation>
-      <search><![CDATA[		if (isset($this->request->post['status'])) {]]></search>
-      <add position="before"><![CDATA[
-		if (isset($this->request->post['mobile_width'])) {
-			$data['mobile_width'] = $this->request->post['mobile_width'];
-		} elseif (!empty($module_info) && !empty($module_info['mobile_width'])) {
+      <search>$data['header'] = $this-&gt;load-&gt;controller('common/header');</search>
+      <add position="before">
+		if (isset($this-&gt;request-&gt;post['mobile_width'])) {
+			$data['mobile_width'] = $this-&gt;request-&gt;post['mobile_width'];
+		} elseif (!empty($module_info) &amp;&amp; !empty($module_info['mobile_width'])) {
 			$data['mobile_width'] = $module_info['mobile_width'];
 		} else {
 			$data['mobile_width'] = $data['width'];
 		}
 
-		if (isset($this->request->post['mobile_height'])) {
-			$data['mobile_height'] = $this->request->post['mobile_height'];
-		} elseif (!empty($module_info) && !empty($module_info['mobile_height'])) {
+		if (isset($this-&gt;request-&gt;post['mobile_height'])) {
+			$data['mobile_height'] = $this-&gt;request-&gt;post['mobile_height'];
+		} elseif (!empty($module_info) &amp;&amp; !empty($module_info['mobile_height'])) {
 			$data['mobile_height'] = $module_info['mobile_height'];
 		} else {
 			$data['mobile_height'] = $data['height'];
 		}
 
-]]></add>
+</add>
     </operation>
     <operation>
-      <search><![CDATA[		if (!$this->request->post['height']) {
-			$this->error['height'] = $this->language->get('error_height');
-		}]]></search>
-      <add position="after"><![CDATA[
+      <search>return !$this-&gt;error;</search>
+      <add position="before">
 
-		if (empty($this->request->post['mobile_width']) || (int)$this->request->post['mobile_width'] < 1) {
-			$this->error['mobile_width'] = $this->language->get('error_mobile_width');
+		if (empty($this-&gt;request-&gt;post['mobile_width']) || (int)$this-&gt;request-&gt;post['mobile_width'] &lt; 1) {
+			$this-&gt;error['mobile_width'] = $this-&gt;language-&gt;get('error_mobile_width');
 		}
 
-		if (empty($this->request->post['mobile_height']) || (int)$this->request->post['mobile_height'] < 1) {
-			$this->error['mobile_height'] = $this->language->get('error_mobile_height');
-		}]]></add>
+		if (empty($this-&gt;request-&gt;post['mobile_height']) || (int)$this-&gt;request-&gt;post['mobile_height'] &lt; 1) {
+			$this-&gt;error['mobile_height'] = $this-&gt;language-&gt;get('error_mobile_height');
+		}</add>
     </operation>
   </file>
-
   <file path="admin/view/template/extension/module/carousel.twig">
     <operation>
-      <search><![CDATA[</form>]]></search>
-      <add position="before"><![CDATA[
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-mobile-width">{{ entry_mobile_width }}</label>
-            <div class="col-sm-10">
-              <input type="text" name="mobile_width" value="{{ mobile_width }}" placeholder="{{ entry_mobile_width }}" id="input-mobile-width" class="form-control" />
+      <search>&lt;/form&gt;</search>
+      <add position="before">
+          &lt;div class="form-group required"&gt;
+            &lt;label class="col-sm-2 control-label" for="input-mobile-width"&gt;{{ entry_mobile_width }}&lt;/label&gt;
+            &lt;div class="col-sm-10"&gt;
+              &lt;input type="text" name="mobile_width" value="{{ mobile_width }}" placeholder="{{ entry_mobile_width }}" id="input-mobile-width" class="form-control" /&gt;
               {% if error_mobile_width %}
-              <div class="text-danger">{{ error_mobile_width }}</div>
+              &lt;div class="text-danger"&gt;{{ error_mobile_width }}&lt;/div&gt;
               {% endif %}
-            </div>
-          </div>
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-mobile-height">{{ entry_mobile_height }}</label>
-            <div class="col-sm-10">
-              <input type="text" name="mobile_height" value="{{ mobile_height }}" placeholder="{{ entry_mobile_height }}" id="input-mobile-height" class="form-control" />
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="form-group required"&gt;
+            &lt;label class="col-sm-2 control-label" for="input-mobile-height"&gt;{{ entry_mobile_height }}&lt;/label&gt;
+            &lt;div class="col-sm-10"&gt;
+              &lt;input type="text" name="mobile_height" value="{{ mobile_height }}" placeholder="{{ entry_mobile_height }}" id="input-mobile-height" class="form-control" /&gt;
               {% if error_mobile_height %}
-              <div class="text-danger">{{ error_mobile_height }}</div>
+              &lt;div class="text-danger"&gt;{{ error_mobile_height }}&lt;/div&gt;
               {% endif %}
-            </div>
-          </div>
-]]></add>
+            &lt;/div&gt;
+          &lt;/div&gt;
+</add>
     </operation>
   </file>
-
   <file path="admin/controller/extension/module/slideshow.php">
     <operation>
-      <search><![CDATA[$this->load->language('extension/module/slideshow');]]></search>
-      <add position="after"><![CDATA[
-		$this->load->language('extension/module/probg_banner_mobile_fields');]]></add>
+      <search>$this-&gt;load-&gt;language('extension/module/slideshow');</search>
+      <add position="after">
+		$this-&gt;load-&gt;language('extension/module/probg_banner_mobile_fields');</add>
     </operation>
     <operation>
-      <search><![CDATA[		if (isset($this->error['height'])) {
-			$data['error_height'] = $this->error['height'];
-		} else {
-			$data['error_height'] = '';
-		}]]></search>
-      <add position="after"><![CDATA[
+      <search>$data['breadcrumbs'] = array();</search>
+      <add position="before">
 
-		if (isset($this->error['mobile_width'])) {
-			$data['error_mobile_width'] = $this->error['mobile_width'];
+		if (isset($this-&gt;error['mobile_width'])) {
+			$data['error_mobile_width'] = $this-&gt;error['mobile_width'];
 		} else {
 			$data['error_mobile_width'] = '';
 		}
 
-		if (isset($this->error['mobile_height'])) {
-			$data['error_mobile_height'] = $this->error['mobile_height'];
+		if (isset($this-&gt;error['mobile_height'])) {
+			$data['error_mobile_height'] = $this-&gt;error['mobile_height'];
 		} else {
 			$data['error_mobile_height'] = '';
-		}]]></add>
+		}</add>
     </operation>
     <operation>
-      <search><![CDATA[		if (isset($this->request->post['status'])) {]]></search>
-      <add position="before"><![CDATA[
-		if (isset($this->request->post['mobile_width'])) {
-			$data['mobile_width'] = $this->request->post['mobile_width'];
-		} elseif (!empty($module_info) && !empty($module_info['mobile_width'])) {
+      <search>$data['header'] = $this-&gt;load-&gt;controller('common/header');</search>
+      <add position="before">
+		if (isset($this-&gt;request-&gt;post['mobile_width'])) {
+			$data['mobile_width'] = $this-&gt;request-&gt;post['mobile_width'];
+		} elseif (!empty($module_info) &amp;&amp; !empty($module_info['mobile_width'])) {
 			$data['mobile_width'] = $module_info['mobile_width'];
 		} else {
 			$data['mobile_width'] = $data['width'];
 		}
 
-		if (isset($this->request->post['mobile_height'])) {
-			$data['mobile_height'] = $this->request->post['mobile_height'];
-		} elseif (!empty($module_info) && !empty($module_info['mobile_height'])) {
+		if (isset($this-&gt;request-&gt;post['mobile_height'])) {
+			$data['mobile_height'] = $this-&gt;request-&gt;post['mobile_height'];
+		} elseif (!empty($module_info) &amp;&amp; !empty($module_info['mobile_height'])) {
 			$data['mobile_height'] = $module_info['mobile_height'];
 		} else {
 			$data['mobile_height'] = $data['height'];
 		}
 
-]]></add>
+</add>
     </operation>
     <operation>
-      <search><![CDATA[		if (!$this->request->post['height']) {
-			$this->error['height'] = $this->language->get('error_height');
-		}]]></search>
-      <add position="after"><![CDATA[
+      <search>return !$this-&gt;error;</search>
+      <add position="before">
 
-		if (empty($this->request->post['mobile_width']) || (int)$this->request->post['mobile_width'] < 1) {
-			$this->error['mobile_width'] = $this->language->get('error_mobile_width');
+		if (empty($this-&gt;request-&gt;post['mobile_width']) || (int)$this-&gt;request-&gt;post['mobile_width'] &lt; 1) {
+			$this-&gt;error['mobile_width'] = $this-&gt;language-&gt;get('error_mobile_width');
 		}
 
-		if (empty($this->request->post['mobile_height']) || (int)$this->request->post['mobile_height'] < 1) {
-			$this->error['mobile_height'] = $this->language->get('error_mobile_height');
-		}]]></add>
+		if (empty($this-&gt;request-&gt;post['mobile_height']) || (int)$this-&gt;request-&gt;post['mobile_height'] &lt; 1) {
+			$this-&gt;error['mobile_height'] = $this-&gt;language-&gt;get('error_mobile_height');
+		}</add>
     </operation>
   </file>
-
   <file path="admin/view/template/extension/module/slideshow.twig">
     <operation>
-      <search><![CDATA[</form>]]></search>
-      <add position="before"><![CDATA[
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-mobile-width">{{ entry_mobile_width }}</label>
-            <div class="col-sm-10">
-              <input type="text" name="mobile_width" value="{{ mobile_width }}" placeholder="{{ entry_mobile_width }}" id="input-mobile-width" class="form-control" />
+      <search>&lt;/form&gt;</search>
+      <add position="before">
+          &lt;div class="form-group required"&gt;
+            &lt;label class="col-sm-2 control-label" for="input-mobile-width"&gt;{{ entry_mobile_width }}&lt;/label&gt;
+            &lt;div class="col-sm-10"&gt;
+              &lt;input type="text" name="mobile_width" value="{{ mobile_width }}" placeholder="{{ entry_mobile_width }}" id="input-mobile-width" class="form-control" /&gt;
               {% if error_mobile_width %}
-              <div class="text-danger">{{ error_mobile_width }}</div>
+              &lt;div class="text-danger"&gt;{{ error_mobile_width }}&lt;/div&gt;
               {% endif %}
-            </div>
-          </div>
-          <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-mobile-height">{{ entry_mobile_height }}</label>
-            <div class="col-sm-10">
-              <input type="text" name="mobile_height" value="{{ mobile_height }}" placeholder="{{ entry_mobile_height }}" id="input-mobile-height" class="form-control" />
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="form-group required"&gt;
+            &lt;label class="col-sm-2 control-label" for="input-mobile-height"&gt;{{ entry_mobile_height }}&lt;/label&gt;
+            &lt;div class="col-sm-10"&gt;
+              &lt;input type="text" name="mobile_height" value="{{ mobile_height }}" placeholder="{{ entry_mobile_height }}" id="input-mobile-height" class="form-control" /&gt;
               {% if error_mobile_height %}
-              <div class="text-danger">{{ error_mobile_height }}</div>
+              &lt;div class="text-danger"&gt;{{ error_mobile_height }}&lt;/div&gt;
               {% endif %}
-            </div>
-          </div>
-]]></add>
+            &lt;/div&gt;
+          &lt;/div&gt;
+</add>
     </operation>
   </file>
-
-  <!-- Build both desktop and mobile URLs and make hidden titles empty for custom themes. -->
   <file path="catalog/controller/extension/module/banner.php">
     <operation>
-      <search><![CDATA[		foreach ($results as $result) {]]></search>
-      <add position="before"><![CDATA[
+      <search>		foreach ($results as $result) {</search>
+      <add position="before">
 		$mobile_width = !empty($setting['mobile_width']) ? (int)$setting['mobile_width'] : (int)$setting['width'];
 		$mobile_height = !empty($setting['mobile_height']) ? (int)$setting['mobile_height'] : (int)$setting['height'];
 
-]]></add>
+</add>
     </operation>
     <operation>
-      <search><![CDATA[			if (is_file(DIR_IMAGE . $result['image'])) {]]></search>
-      <add position="after"><![CDATA[
-				if (!empty($result['mobile_image']) && is_file(DIR_IMAGE . $result['mobile_image'])) {
-					$mobile_image = $this->model_tool_image->resize($result['mobile_image'], $mobile_width, $mobile_height);
+      <search>			if (is_file(DIR_IMAGE . $result['image'])) {</search>
+      <add position="after">
+				if (!empty($result['mobile_image']) &amp;&amp; is_file(DIR_IMAGE . $result['mobile_image'])) {
+					$mobile_image = $this-&gt;model_tool_image-&gt;resize($result['mobile_image'], $mobile_width, $mobile_height);
 				} else {
-					$mobile_image = $this->model_tool_image->resize($result['image'], $mobile_width, $mobile_height);
+					$mobile_image = $this-&gt;model_tool_image-&gt;resize($result['image'], $mobile_width, $mobile_height);
 				}
-]]></add>
+</add>
     </operation>
     <operation>
-      <search><![CDATA[					'title' => $result['title'],
-					'link'  => $result['link'],
-					'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])]]></search>
-      <add position="replace"><![CDATA[					'title'        => !empty($result['hide_title']) ? '' : $result['title'],
-					'alt'          => $result['title'],
-					'hide_title'   => !empty($result['hide_title']) ? 1 : 0,
-					'link'         => $result['link'],
-					'image'        => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']),
-					'mobile_image' => $mobile_image]]></add>
+      <search>					'title' =&gt; $result['title'],
+					'link'  =&gt; $result['link'],
+					'image' =&gt; $this-&gt;model_tool_image-&gt;resize($result['image'], $setting['width'], $setting['height'])</search>
+      <add position="replace">					'title'        =&gt; !empty($result['hide_title']) ? '' : $result['title'],
+					'alt'          =&gt; $result['title'],
+					'hide_title'   =&gt; !empty($result['hide_title']) ? 1 : 0,
+					'link'         =&gt; $result['link'],
+					'image'        =&gt; $this-&gt;model_tool_image-&gt;resize($result['image'], $setting['width'], $setting['height']),
+					'mobile_image' =&gt; $mobile_image</add>
     </operation>
   </file>
-
-  <!-- Responsive default storefront template. -->
   <file path="catalog/view/theme/default/template/extension/module/banner.twig">
     <operation>
-      <search><![CDATA[<div class="swiper-slide">{% if banner.link %}<a href="{{ banner.link }}"><img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" /></a>{% else %}<img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" />{% endif %}</div>]]></search>
-      <add position="replace"><![CDATA[<div class="swiper-slide">
-{% if banner.link %}<a href="{{ banner.link }}"{% if banner.title %} title="{{ banner.title }}"{% endif %}>{% endif %}
-<picture style="display:block">
-  {% if banner.mobile_image %}<source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}" />{% endif %}
-  <img src="{{ banner.image }}" alt="{{ banner.alt }}" class="img-responsive" />
-</picture>
-{% if banner.link %}</a>{% endif %}
-</div>]]></add>
+      <search>&lt;div class="swiper-slide"&gt;{% if banner.link %}&lt;a href="{{ banner.link }}"&gt;&lt;img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" /&gt;&lt;/a&gt;{% else %}&lt;img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" /&gt;{% endif %}&lt;/div&gt;</search>
+      <add position="replace">&lt;div class="swiper-slide"&gt;
+{% if banner.link %}&lt;a href="{{ banner.link }}"{% if banner.title %} title="{{ banner.title }}"{% endif %}&gt;{% endif %}
+&lt;picture style="display:block"&gt;
+  {% if banner.mobile_image %}&lt;source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}" /&gt;{% endif %}
+  &lt;img src="{{ banner.image }}" alt="{{ banner.alt }}" class="img-responsive" /&gt;
+&lt;/picture&gt;
+{% if banner.link %}&lt;/a&gt;{% endif %}
+&lt;/div&gt;</add>
     </operation>
   </file>
-  <!-- Responsive image data for the standard Carousel module. -->
   <file path="catalog/controller/extension/module/carousel.php">
     <operation>
-      <search><![CDATA[		foreach ($results as $result) {]]></search>
-      <add position="before"><![CDATA[
+      <search>		foreach ($results as $result) {</search>
+      <add position="before">
 		$mobile_width = !empty($setting['mobile_width']) ? (int)$setting['mobile_width'] : (int)$setting['width'];
 		$mobile_height = !empty($setting['mobile_height']) ? (int)$setting['mobile_height'] : (int)$setting['height'];
 
-]]></add>
+</add>
     </operation>
     <operation>
-      <search><![CDATA[			if (is_file(DIR_IMAGE . $result['image'])) {]]></search>
-      <add position="after"><![CDATA[
-				if (!empty($result['mobile_image']) && is_file(DIR_IMAGE . $result['mobile_image'])) {
-					$mobile_image = $this->model_tool_image->resize($result['mobile_image'], $mobile_width, $mobile_height);
+      <search>			if (is_file(DIR_IMAGE . $result['image'])) {</search>
+      <add position="after">
+				if (!empty($result['mobile_image']) &amp;&amp; is_file(DIR_IMAGE . $result['mobile_image'])) {
+					$mobile_image = $this-&gt;model_tool_image-&gt;resize($result['mobile_image'], $mobile_width, $mobile_height);
 				} else {
-					$mobile_image = $this->model_tool_image->resize($result['image'], $mobile_width, $mobile_height);
+					$mobile_image = $this-&gt;model_tool_image-&gt;resize($result['image'], $mobile_width, $mobile_height);
 				}
-]]></add>
+</add>
     </operation>
     <operation>
-      <search><![CDATA[					'title' => $result['title'],
-					'link'  => $result['link'],
-					'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])]]></search>
-      <add position="replace"><![CDATA[					'title'        => !empty($result['hide_title']) ? '' : $result['title'],
-					'alt'          => $result['title'],
-					'hide_title'   => !empty($result['hide_title']) ? 1 : 0,
-					'link'         => $result['link'],
-					'image'        => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']),
-					'mobile_image' => $mobile_image]]></add>
+      <search>					'title' =&gt; $result['title'],
+					'link'  =&gt; $result['link'],
+					'image' =&gt; $this-&gt;model_tool_image-&gt;resize($result['image'], $setting['width'], $setting['height'])</search>
+      <add position="replace">					'title'        =&gt; !empty($result['hide_title']) ? '' : $result['title'],
+					'alt'          =&gt; $result['title'],
+					'hide_title'   =&gt; !empty($result['hide_title']) ? 1 : 0,
+					'link'         =&gt; $result['link'],
+					'image'        =&gt; $this-&gt;model_tool_image-&gt;resize($result['image'], $setting['width'], $setting['height']),
+					'mobile_image' =&gt; $mobile_image</add>
     </operation>
   </file>
-
   <file path="catalog/view/theme/default/template/extension/module/carousel.twig">
     <operation>
-      <search><![CDATA[<div class="swiper-slide text-center">{% if banner.link %}<a href="{{ banner.link }}"><img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" /></a>{% else %}<img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" />{% endif %}</div>]]></search>
-      <add position="replace"><![CDATA[<div class="swiper-slide text-center">
-{% if banner.link %}<a href="{{ banner.link }}"{% if banner.title %} title="{{ banner.title }}"{% endif %}>{% endif %}
-<picture style="display:block">
-  {% if banner.mobile_image %}<source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}" />{% endif %}
-  <img src="{{ banner.image }}" alt="{{ banner.alt }}" class="img-responsive" />
-</picture>
-{% if banner.link %}</a>{% endif %}
-</div>]]></add>
+      <search>&lt;div class="swiper-slide text-center"&gt;{% if banner.link %}&lt;a href="{{ banner.link }}"&gt;&lt;img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" /&gt;&lt;/a&gt;{% else %}&lt;img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" /&gt;{% endif %}&lt;/div&gt;</search>
+      <add position="replace">&lt;div class="swiper-slide text-center"&gt;
+{% if banner.link %}&lt;a href="{{ banner.link }}"{% if banner.title %} title="{{ banner.title }}"{% endif %}&gt;{% endif %}
+&lt;picture style="display:block"&gt;
+  {% if banner.mobile_image %}&lt;source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}" /&gt;{% endif %}
+  &lt;img src="{{ banner.image }}" alt="{{ banner.alt }}" class="img-responsive" /&gt;
+&lt;/picture&gt;
+{% if banner.link %}&lt;/a&gt;{% endif %}
+&lt;/div&gt;</add>
     </operation>
   </file>
-
-  <!-- Responsive image data for the standard Slideshow module. -->
   <file path="catalog/controller/extension/module/slideshow.php">
     <operation>
-      <search><![CDATA[		foreach ($results as $result) {]]></search>
-      <add position="before"><![CDATA[
+      <search>		foreach ($results as $result) {</search>
+      <add position="before">
 		$mobile_width = !empty($setting['mobile_width']) ? (int)$setting['mobile_width'] : (int)$setting['width'];
 		$mobile_height = !empty($setting['mobile_height']) ? (int)$setting['mobile_height'] : (int)$setting['height'];
 
-]]></add>
+</add>
     </operation>
     <operation>
-      <search><![CDATA[			if (is_file(DIR_IMAGE . $result['image'])) {]]></search>
-      <add position="after"><![CDATA[
-				if (!empty($result['mobile_image']) && is_file(DIR_IMAGE . $result['mobile_image'])) {
-					$mobile_image = $this->model_tool_image->resize($result['mobile_image'], $mobile_width, $mobile_height);
+      <search>			if (is_file(DIR_IMAGE . $result['image'])) {</search>
+      <add position="after">
+				if (!empty($result['mobile_image']) &amp;&amp; is_file(DIR_IMAGE . $result['mobile_image'])) {
+					$mobile_image = $this-&gt;model_tool_image-&gt;resize($result['mobile_image'], $mobile_width, $mobile_height);
 				} else {
-					$mobile_image = $this->model_tool_image->resize($result['image'], $mobile_width, $mobile_height);
+					$mobile_image = $this-&gt;model_tool_image-&gt;resize($result['image'], $mobile_width, $mobile_height);
 				}
-]]></add>
+</add>
     </operation>
     <operation>
-      <search><![CDATA[					'title' => $result['title'],
-					'link'  => $result['link'],
-					'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])]]></search>
-      <add position="replace"><![CDATA[					'title'        => !empty($result['hide_title']) ? '' : $result['title'],
-					'alt'          => $result['title'],
-					'hide_title'   => !empty($result['hide_title']) ? 1 : 0,
-					'link'         => $result['link'],
-					'image'        => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']),
-					'mobile_image' => $mobile_image]]></add>
+      <search>					'title' =&gt; $result['title'],
+					'link'  =&gt; $result['link'],
+					'image' =&gt; $this-&gt;model_tool_image-&gt;resize($result['image'], $setting['width'], $setting['height'])</search>
+      <add position="replace">					'title'        =&gt; !empty($result['hide_title']) ? '' : $result['title'],
+					'alt'          =&gt; $result['title'],
+					'hide_title'   =&gt; !empty($result['hide_title']) ? 1 : 0,
+					'link'         =&gt; $result['link'],
+					'image'        =&gt; $this-&gt;model_tool_image-&gt;resize($result['image'], $setting['width'], $setting['height']),
+					'mobile_image' =&gt; $mobile_image</add>
     </operation>
   </file>
-
   <file path="catalog/view/theme/default/template/extension/module/slideshow.twig">
     <operation>
-      <search><![CDATA[<div class="swiper-slide text-center">{% if banner.link %}<a href="{{ banner.link }}"><img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" /></a>{% else %}<img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" />{% endif %}</div>]]></search>
-      <add position="replace"><![CDATA[<div class="swiper-slide text-center">
-{% if banner.link %}<a href="{{ banner.link }}"{% if banner.title %} title="{{ banner.title }}"{% endif %}>{% endif %}
-<picture style="display:block">
-  {% if banner.mobile_image %}<source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}" />{% endif %}
-  <img src="{{ banner.image }}" alt="{{ banner.alt }}" class="img-responsive" />
-</picture>
-{% if banner.link %}</a>{% endif %}
-</div>]]></add>
+      <search>&lt;div class="swiper-slide text-center"&gt;{% if banner.link %}&lt;a href="{{ banner.link }}"&gt;&lt;img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" /&gt;&lt;/a&gt;{% else %}&lt;img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" /&gt;{% endif %}&lt;/div&gt;</search>
+      <add position="replace">&lt;div class="swiper-slide text-center"&gt;
+{% if banner.link %}&lt;a href="{{ banner.link }}"{% if banner.title %} title="{{ banner.title }}"{% endif %}&gt;{% endif %}
+&lt;picture style="display:block"&gt;
+  {% if banner.mobile_image %}&lt;source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}" /&gt;{% endif %}
+  &lt;img src="{{ banner.image }}" alt="{{ banner.alt }}" class="img-responsive" /&gt;
+&lt;/picture&gt;
+{% if banner.link %}&lt;/a&gt;{% endif %}
+&lt;/div&gt;</add>
     </operation>
   </file>
-
 </modification>
