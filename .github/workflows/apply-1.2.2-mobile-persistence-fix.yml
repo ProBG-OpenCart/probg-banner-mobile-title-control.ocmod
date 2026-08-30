@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - '.github/workflows/apply-1.2.2-mobile-persistence-fix.yml'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -36,13 +37,17 @@ jobs:
               'admin/controller/extension/module/carousel.php',
               'admin/controller/extension/module/slideshow.php',
           }
+          seen = set()
           for file_el in root.findall('file'):
-              if file_el.get('path') not in paths:
+              path = file_el.get('path')
+              if path not in paths:
                   continue
               searches = [(op.findtext('search') or '').strip() for op in file_el.findall('operation')]
               assert "$data['breadcrumbs'] = array();" in searches
               assert "$data['header'] = $this->load->controller('common/header');" in searches
               assert 'return !$this->error;' in searches
+              seen.add(path)
+          assert seen == paths
           print('install.xml and controller anchors OK')
           PY
 
