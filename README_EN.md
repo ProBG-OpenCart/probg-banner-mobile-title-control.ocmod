@@ -159,21 +159,129 @@ The original files are not overwritten.
 
 ## Custom themes
 
-The storefront OCMOD template operation targets the default theme:
+The storefront OCMOD template operation targets only the default theme:
 
 ```text
 catalog/view/theme/default/template/extension/module/banner.twig
 ```
 
-If the active theme provides its own `extension/module/banner.twig`, adapt that template to use:
+If the active theme provides its own Banner template, OpenCart loads that file instead and the modification applied to the `default` theme will not be visible. The custom template is usually located at:
 
-- `banner.image`
-- `banner.mobile_image`
-- `banner.title`
-- `banner.alt`
-- `banner.hide_title`
+```text
+catalog/view/theme/THEME-NAME/template/extension/module/banner.twig
+```
 
-The recommended implementation uses `<picture>` with `<source media="(max-width: 767px)">`.
+The module storefront controller already provides all required data regardless of the active theme:
+
+- `banner.image` — desktop image;
+- `banner.mobile_image` — mobile image;
+- `banner.title` — visible title; empty when **Hide Title** is enabled;
+- `banner.alt` — original banner title used for image `alt` text;
+- `banner.hide_title` — `1` when **Hide Title** is enabled.
+
+### Manual custom-theme modification
+
+Open:
+
+```text
+catalog/view/theme/THEME-NAME/template/extension/module/banner.twig
+```
+
+Find the markup that renders each banner image. In a standard or near-standard theme it usually looks similar to:
+
+```twig
+<div class="swiper-slide">
+  {% if banner.link %}
+    <a href="{{ banner.link }}">
+      <img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" />
+    </a>
+  {% else %}
+    <img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" />
+  {% endif %}
+</div>
+```
+
+Replace only the image portion with a responsive `<picture>` implementation:
+
+```twig
+<div class="swiper-slide">
+  {% if banner.link %}<a href="{{ banner.link }}">{% endif %}
+
+  <picture style="display:block">
+    {% if banner.mobile_image %}
+      <source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}" />
+    {% endif %}
+    <img src="{{ banner.image }}" alt="{{ banner.alt }}" class="img-responsive" />
+  </picture>
+
+  {% if banner.link %}</a>{% endif %}
+</div>
+```
+
+With this markup:
+
+- up to `767px`, the browser uses `banner.mobile_image`;
+- above `767px`, it uses `banner.image`;
+- when no separate mobile image exists, the controller already provides the desktop image as fallback;
+- `banner.alt` remains available even when the visible title is hidden.
+
+### When the theme renders a visible title/caption
+
+Some custom themes render a visible caption such as:
+
+```twig
+<h3>{{ banner.title }}</h3>
+```
+
+To support **Hide Title**, wrap it in a condition:
+
+```twig
+{% if banner.title and not banner.hide_title %}
+  <h3>{{ banner.title }}</h3>
+{% endif %}
+```
+
+Because the module already sends an empty `banner.title` when **Hide Title** is enabled, checking only `banner.title` is sufficient in most themes:
+
+```twig
+{% if banner.title %}
+  <h3>{{ banner.title }}</h3>
+{% endif %}
+```
+
+### Themes using lazy loading or custom markup
+
+If the theme uses `data-src`, `data-srcset`, `loading="lazy"`, `img-fluid`, custom slider classes, or a JavaScript lazy loader, do not mechanically replace the entire `<div class="swiper-slide">`. Preserve the theme's markup and classes, and add only the required data logic for:
+
+```twig
+banner.mobile_image
+banner.image
+banner.alt
+banner.hide_title
+```
+
+A minimal `<picture>` integration can look like:
+
+```twig
+<picture>
+  {% if banner.mobile_image %}
+    <source media="(max-width: 767px)" srcset="{{ banner.mobile_image }}" />
+  {% endif %}
+  <img src="{{ banner.image }}" alt="{{ banner.alt }}" />
+</picture>
+```
+
+If the custom theme uses a different responsive breakpoint such as `576px`, `768px`, or `992px`, adjust `(max-width: 767px)` to match the theme's layout.
+
+### After the manual modification
+
+1. Save the active theme's `banner.twig` file.
+2. Open **Extensions → Modifications** and click **Refresh**.
+3. Clear the Theme cache from Developer Settings.
+4. Clear any additional cache provided by the custom theme.
+5. Test the home page on desktop and below the configured mobile breakpoint.
+
+Important: a custom-theme update may overwrite manually edited `banner.twig` files. Recheck the template after updating the theme.
 
 ## Upgrade notes
 
