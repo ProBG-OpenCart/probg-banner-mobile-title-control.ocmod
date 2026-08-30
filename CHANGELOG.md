@@ -13,6 +13,19 @@ Every released version must have its own changelog entry. Versions follow Semant
 - `MINOR` (`1.0.0` → `1.1.0`) for backward-compatible new functionality;
 - `MAJOR` (`1.x.x` → `2.0.0`) for breaking changes.
 
+## [1.2.0] - 2026-08-30
+
+### feat
+
+- Added `Mobile Width` and `Mobile Height` settings to the standard OpenCart Carousel module.
+- Added `Mobile Width` and `Mobile Height` settings to the standard OpenCart Slideshow module.
+- Added responsive mobile-image generation and `<picture>` output for the default Carousel and Slideshow storefront templates.
+- Extended `Hide Title`, `alt`, and conditional link `title` handling to Carousel and Slideshow.
+
+### fix
+
+- Made the Banner admin-template modification more robust on OpenCart 3.0.3.8 by inserting the mobile dimension fields directly after the standard Height field instead of relying on the Status block.
+
 ## [1.1.0] - 2026-08-30
 
 ### feat

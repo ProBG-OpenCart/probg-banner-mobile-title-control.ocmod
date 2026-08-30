@@ -6,7 +6,7 @@ English documentation: [README_EN.md](README_EN.md)
 
 ## Версия
 
-Текуща версия: **1.1.0**
+Текуща версия: **1.2.0**
 
 Историята на промените по версии се поддържа в [CHANGELOG.md](CHANGELOG.md).
 
@@ -37,7 +37,7 @@ English documentation: [README_EN.md](README_EN.md)
 
 ### Размери за мобилното изображение
 
-В настройките на всяка инстанция на стандартния модул **Banner** се добавят:
+В настройките на всяка инстанция на стандартните модули **Banner**, **Carousel** и **Slideshow** се добавят:
 
 - **Ширина на мобилното изображение**;
 - **Височина на мобилното изображение**.
@@ -108,7 +108,7 @@ hide_title TINYINT(1)
 
 ### Настройване на размерите
 
-Отворете **Extensions → Extensions → Modules → Banner** и редактирайте съответната Banner инстанция.
+Отворете **Extensions → Extensions → Modules** и редактирайте съответната инстанция на **Banner**, **Carousel** или **Slideshow**.
 
 Задайте:
 
@@ -274,6 +274,17 @@ banner.hide_title
 ```
 
 Ако custom темата използва собствен breakpoint, например `576px`, `768px` или `992px`, можете да промените `(max-width: 767px)` според responsive логиката на темата.
+
+### Carousel и Slideshow при custom тема
+
+От версия **1.2.0** responsive mobile изображенията се поддържат и от стандартните **Carousel** и **Slideshow** модули. Ако custom темата има собствени шаблони, приложете същата `<picture>` логика и в:
+
+```text
+catalog/view/theme/ИМЕ-НА-ТЕМАТА/template/extension/module/carousel.twig
+catalog/view/theme/ИМЕ-НА-ТЕМАТА/template/extension/module/slideshow.twig
+```
+
+Използвайте `banner.mobile_image` за mobile source, `banner.image` за desktop изображението и `banner.alt` за `alt`. При линк добавяйте `title="{{ banner.title }}"` само когато `banner.title` не е празно.
 
 ### След ръчната промяна
 
