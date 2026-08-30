@@ -6,7 +6,7 @@ English documentation: [README_EN.md](README_EN.md)
 
 ## Версия
 
-Текуща версия: **1.2.0**
+Текуща версия: **1.2.1**
 
 Историята на промените по версии се поддържа в [CHANGELOG.md](CHANGELOG.md).
 
@@ -45,6 +45,8 @@ English documentation: [README_EN.md](README_EN.md)
 Desktop размерите продължават да използват стандартните полета Width и Height на OpenCart.
 
 При съществуващи Banner модули без въведени mobile размери се използват стандартните desktop размери като fallback.
+
+От версия **1.2.1** полетата за mobile размери се добавят непосредствено преди края на формата на Banner, Carousel и Slideshow. Това избягва конфликт с други OCMOD модификации или admin теми, които променят стандартния HTML около полетата Width/Height/Status.
 
 ### Скриване на заглавието
 

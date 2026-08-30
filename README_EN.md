@@ -6,7 +6,7 @@ Bulgarian documentation: [README.md](README.md)
 
 ## Version
 
-Current version: **1.2.0**
+Current version: **1.2.1**
 
 Release history is maintained in [CHANGELOG.md](CHANGELOG.md).
 
