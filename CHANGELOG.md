@@ -13,6 +13,14 @@ Every released version must have its own changelog entry. Versions follow Semant
 - `MINOR` (`1.0.0` → `1.1.0`) for backward-compatible new functionality;
 - `MAJOR` (`1.x.x` → `2.0.0`) for breaking changes.
 
+## [1.0.1] - 2026-08-30
+
+### fix
+
+- Fixed `Unknown column 'mobile_image' in 'INSERT INTO'` when the OCMOD modification was active before the helper module install routine had created the database columns.
+- Added a self-healing database schema check before `addBanner()` and `editBanner()` so `mobile_image` and `hide_title` are created automatically when missing.
+- Removed the runtime dependency on manually running the helper module installation before editing or creating banners.
+
 ## [1.0.0] - 2026-08-15
 
 ### feat
