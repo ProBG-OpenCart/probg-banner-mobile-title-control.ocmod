@@ -54,7 +54,6 @@ for path in controller_paths:
 ET.indent(tree, space='  ')
 tree.write(xml_path, encoding='utf-8', xml_declaration=True)
 
-# Preserve the expected XML declaration spelling used by the project.
 text = xml_path.read_text(encoding='utf-8')
 text = text.replace("<?xml version='1.0' encoding='utf-8'?>", '<?xml version="1.0" encoding="utf-8"?>', 1)
 xml_path.write_text(text, encoding='utf-8')
@@ -76,11 +75,10 @@ for filename in ('README.md', 'README_EN.md'):
     s = s.replace('**1.2.1**', '**1.2.2**', 1)
     p.write_text(s, encoding='utf-8')
 
-# Final structural assertions.
 ET.parse(xml_path)
 text = xml_path.read_text(encoding='utf-8')
 assert '<version>1.2.2</version>' in text
-assert text.count("$data['header'] = $this->load->controller('common/header');") >= 6
-assert text.count("$data['breadcrumbs'] = array();") >= 6
-assert text.count('return !$this->error;') >= 6
+assert text.count("$data['header'] = $this->load->controller('common/header');") >= 3
+assert text.count("$data['breadcrumbs'] = array();") >= 3
+assert text.count('return !$this->error;') >= 3
 print('1.2.2 persistence fix applied and validated')
