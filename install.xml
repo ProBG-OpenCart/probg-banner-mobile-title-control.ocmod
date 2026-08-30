@@ -2,12 +2,42 @@
 <modification>
   <name>ProBG Banner Mobile &amp; Title Control</name>
   <code>probg_banner_mobile_title_control</code>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <author>ProBG</author>
   <link>https://probg.com/</link>
 
   <!-- Persist mobile image and hide-title flag in the standard banner_image table. -->
   <file path="admin/model/design/banner.php">
+    <!-- 1.0.1: self-heal the database schema before any banner write. -->
+    <operation>
+      <search><![CDATA[public function addBanner($data) {]]></search>
+      <add position="after"><![CDATA[
+		$this->ensureProbgBannerColumns();]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[public function editBanner($banner_id, $data) {]]></search>
+      <add position="after"><![CDATA[
+		$this->ensureProbgBannerColumns();]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[public function getTotalBanners() {]]></search>
+      <add position="before"><![CDATA[
+	private function ensureProbgBannerColumns() {
+		$mobile_image = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "banner_image` LIKE 'mobile_image'");
+
+		if (!$mobile_image->num_rows) {
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "banner_image` ADD `mobile_image` VARCHAR(255) NOT NULL DEFAULT '' AFTER `image`");
+		}
+
+		$hide_title = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "banner_image` LIKE 'hide_title'");
+
+		if (!$hide_title->num_rows) {
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "banner_image` ADD `hide_title` TINYINT(1) NOT NULL DEFAULT '0' AFTER `mobile_image`");
+		}
+	}
+
+]]></add>
+    </operation>
     <operation>
       <search><![CDATA[image = '" .  $this->db->escape($banner_image['image']) . "', sort_order = '" .  (int)$banner_image['sort_order']]]></search>
       <add position="replace"><![CDATA[image = '" .  $this->db->escape($banner_image['image']) . "', mobile_image = '" . $this->db->escape(isset($banner_image['mobile_image']) ? $banner_image['mobile_image'] : '') . "', hide_title = '" . (int)(isset($banner_image['hide_title']) ? $banner_image['hide_title'] : 0) . "', sort_order = '" .  (int)$banner_image['sort_order']]]></add>
