@@ -1,0 +1,38 @@
+name: Apply 1.2.1 Mobile Fields Fix
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/apply-1.2.1-mobile-fields-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/fix-mobile-dimension-fields-visibility
+          fetch-depth: 0
+
+      - name: Apply fix
+        run: python3 .github/scripts/apply-1.2.1-mobile-fields-fix.py
+
+      - name: Validate XML
+        run: python3 -c "import xml.etree.ElementTree as ET; ET.parse('install.xml'); print('install.xml OK')"
+
+      - name: Commit fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/scripts/apply-1.2.1-mobile-fields-fix.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add install.xml CHANGELOG.md README.md README_EN.md .github/scripts/
+          git commit -m 'fix: make mobile dimension fields visible reliably'
+          git push origin HEAD:agent/fix-mobile-dimension-fields-visibility
