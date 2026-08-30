@@ -2,7 +2,7 @@
 <modification>
   <name>ProBG Banner Mobile &amp; Title Control</name>
   <code>probg_banner_mobile_title_control</code>
-  <version>1.2.1</version>
+  <version>1.2.2</version>
   <author>ProBG</author>
   <link>https://probg.com/</link>
 
@@ -120,12 +120,8 @@
 		$this->load->language('extension/module/probg_banner_mobile_fields');]]></add>
     </operation>
     <operation>
-      <search><![CDATA[		if (isset($this->error['height'])) {
-			$data['error_height'] = $this->error['height'];
-		} else {
-			$data['error_height'] = '';
-		}]]></search>
-      <add position="after"><![CDATA[
+      <search><![CDATA[$data['breadcrumbs'] = array();]]></search>
+      <add position="before"><![CDATA[
 
 		if (isset($this->error['mobile_width'])) {
 			$data['error_mobile_width'] = $this->error['mobile_width'];
@@ -140,7 +136,7 @@
 		}]]></add>
     </operation>
     <operation>
-      <search><![CDATA[		if (isset($this->request->post['status'])) {]]></search>
+      <search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
       <add position="before"><![CDATA[
 		if (isset($this->request->post['mobile_width'])) {
 			$data['mobile_width'] = $this->request->post['mobile_width'];
@@ -161,10 +157,8 @@
 ]]></add>
     </operation>
     <operation>
-      <search><![CDATA[		if (!$this->request->post['height']) {
-			$this->error['height'] = $this->language->get('error_height');
-		}]]></search>
-      <add position="after"><![CDATA[
+      <search><![CDATA[return !$this->error;]]></search>
+      <add position="before"><![CDATA[
 
 		if (empty($this->request->post['mobile_width']) || (int)$this->request->post['mobile_width'] < 1) {
 			$this->error['mobile_width'] = $this->language->get('error_mobile_width');
@@ -209,12 +203,8 @@
 		$this->load->language('extension/module/probg_banner_mobile_fields');]]></add>
     </operation>
     <operation>
-      <search><![CDATA[		if (isset($this->error['height'])) {
-			$data['error_height'] = $this->error['height'];
-		} else {
-			$data['error_height'] = '';
-		}]]></search>
-      <add position="after"><![CDATA[
+      <search><![CDATA[$data['breadcrumbs'] = array();]]></search>
+      <add position="before"><![CDATA[
 
 		if (isset($this->error['mobile_width'])) {
 			$data['error_mobile_width'] = $this->error['mobile_width'];
@@ -229,7 +219,7 @@
 		}]]></add>
     </operation>
     <operation>
-      <search><![CDATA[		if (isset($this->request->post['status'])) {]]></search>
+      <search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
       <add position="before"><![CDATA[
 		if (isset($this->request->post['mobile_width'])) {
 			$data['mobile_width'] = $this->request->post['mobile_width'];
@@ -250,10 +240,8 @@
 ]]></add>
     </operation>
     <operation>
-      <search><![CDATA[		if (!$this->request->post['height']) {
-			$this->error['height'] = $this->language->get('error_height');
-		}]]></search>
-      <add position="after"><![CDATA[
+      <search><![CDATA[return !$this->error;]]></search>
+      <add position="before"><![CDATA[
 
 		if (empty($this->request->post['mobile_width']) || (int)$this->request->post['mobile_width'] < 1) {
 			$this->error['mobile_width'] = $this->language->get('error_mobile_width');
@@ -298,12 +286,8 @@
 		$this->load->language('extension/module/probg_banner_mobile_fields');]]></add>
     </operation>
     <operation>
-      <search><![CDATA[		if (isset($this->error['height'])) {
-			$data['error_height'] = $this->error['height'];
-		} else {
-			$data['error_height'] = '';
-		}]]></search>
-      <add position="after"><![CDATA[
+      <search><![CDATA[$data['breadcrumbs'] = array();]]></search>
+      <add position="before"><![CDATA[
 
 		if (isset($this->error['mobile_width'])) {
 			$data['error_mobile_width'] = $this->error['mobile_width'];
@@ -318,7 +302,7 @@
 		}]]></add>
     </operation>
     <operation>
-      <search><![CDATA[		if (isset($this->request->post['status'])) {]]></search>
+      <search><![CDATA[$data['header'] = $this->load->controller('common/header');]]></search>
       <add position="before"><![CDATA[
 		if (isset($this->request->post['mobile_width'])) {
 			$data['mobile_width'] = $this->request->post['mobile_width'];
@@ -339,10 +323,8 @@
 ]]></add>
     </operation>
     <operation>
-      <search><![CDATA[		if (!$this->request->post['height']) {
-			$this->error['height'] = $this->language->get('error_height');
-		}]]></search>
-      <add position="after"><![CDATA[
+      <search><![CDATA[return !$this->error;]]></search>
+      <add position="before"><![CDATA[
 
 		if (empty($this->request->post['mobile_width']) || (int)$this->request->post['mobile_width'] < 1) {
 			$this->error['mobile_width'] = $this->language->get('error_mobile_width');

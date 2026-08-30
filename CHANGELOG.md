@@ -13,6 +13,15 @@ Every released version must have its own changelog entry. Versions follow Semant
 - `MINOR` (`1.0.0` → `1.1.0`) for backward-compatible new functionality;
 - `MAJOR` (`1.x.x` → `2.0.0`) for breaking changes.
 
+## [1.2.2] - 2026-08-30
+
+### fix
+
+- Fixed `Mobile Width` and `Mobile Height` values appearing not to persist after saving Banner, Carousel, or Slideshow module instances.
+- Reworked the admin-controller OCMOD anchors used to restore saved mobile dimensions from module settings.
+- Mobile dimension values are now populated immediately before rendering the module form, using POST values first, then saved module settings, then desktop dimensions as fallback.
+- Made mobile-dimension error mapping and validation anchors more tolerant of other OpenCart OCMOD/admin customizations.
+
 ## [1.2.1] - 2026-08-30
 
 ### fix
