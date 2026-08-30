@@ -13,6 +13,14 @@ Every released version must have its own changelog entry. Versions follow Semant
 - `MINOR` (`1.0.0` → `1.1.0`) for backward-compatible new functionality;
 - `MAJOR` (`1.x.x` → `2.0.0`) for breaking changes.
 
+## [1.1.0] - 2026-08-30
+
+### feat
+
+- Added a conditional HTML `title` attribute to banner links using `banner.title`.
+- The link `title` attribute is omitted automatically when **Hide Title** is enabled because `banner.title` is empty.
+- Updated the custom-theme integration examples to use the same conditional link-title logic.
+
 ## [1.0.3] - 2026-08-30
 
 ### fix
