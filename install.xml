@@ -2,7 +2,7 @@
 <modification>
   <name>ProBG Banner Mobile &amp; Title Control</name>
   <code>probg_banner_mobile_title_control</code>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
   <author>ProBG</author>
   <link>https://probg.com/</link>
 
@@ -178,16 +178,8 @@
 
   <file path="admin/view/template/extension/module/banner.twig">
     <operation>
-      <search><![CDATA[          <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-height">{{ entry_height }}</label>
-            <div class="col-sm-10">
-              <input type="text" name="height" value="{{ height }}" placeholder="{{ entry_height }}" id="input-height" class="form-control" />
-              {% if error_height %}
-              <div class="text-danger">{{ error_height }}</div>
-              {% endif %}
-            </div>
-          </div>]]></search>
-      <add position="after"><![CDATA[
+      <search><![CDATA[</form>]]></search>
+      <add position="before"><![CDATA[
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-mobile-width">{{ entry_mobile_width }}</label>
             <div class="col-sm-10">
@@ -275,16 +267,8 @@
 
   <file path="admin/view/template/extension/module/carousel.twig">
     <operation>
-      <search><![CDATA[          <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-height">{{ entry_height }}</label>
-            <div class="col-sm-10">
-              <input type="text" name="height" value="{{ height }}" placeholder="{{ entry_height }}" id="input-height" class="form-control" />
-              {% if error_height %}
-              <div class="text-danger">{{ error_height }}</div>
-              {% endif %}
-            </div>
-          </div>]]></search>
-      <add position="after"><![CDATA[
+      <search><![CDATA[</form>]]></search>
+      <add position="before"><![CDATA[
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-mobile-width">{{ entry_mobile_width }}</label>
             <div class="col-sm-10">
@@ -372,16 +356,8 @@
 
   <file path="admin/view/template/extension/module/slideshow.twig">
     <operation>
-      <search><![CDATA[          <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-height">{{ entry_height }}</label>
-            <div class="col-sm-10">
-              <input type="text" name="height" value="{{ height }}" placeholder="{{ entry_height }}" id="input-height" class="form-control" />
-              {% if error_height %}
-              <div class="text-danger">{{ error_height }}</div>
-              {% endif %}
-            </div>
-          </div>]]></search>
-      <add position="after"><![CDATA[
+      <search><![CDATA[</form>]]></search>
+      <add position="before"><![CDATA[
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-mobile-width">{{ entry_mobile_width }}</label>
             <div class="col-sm-10">

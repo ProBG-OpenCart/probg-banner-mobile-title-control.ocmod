@@ -13,6 +13,14 @@ Every released version must have its own changelog entry. Versions follow Semant
 - `MINOR` (`1.0.0` → `1.1.0`) for backward-compatible new functionality;
 - `MAJOR` (`1.x.x` → `2.0.0`) for breaking changes.
 
+## [1.2.1] - 2026-08-30
+
+### fix
+
+- Fixed `Mobile Width` and `Mobile Height` fields not appearing in the Banner, Carousel, and Slideshow administration forms on some OpenCart 3 installations.
+- Replaced fragile admin-template OCMOD anchors based on the full Height/Status markup with a stable insertion immediately before the module form closing tag.
+- Improved compatibility with OpenCart 3.0.3.8 installations where another OCMOD or admin customization has already changed the standard module form markup.
+
 ## [1.2.0] - 2026-08-30
 
 ### feat
