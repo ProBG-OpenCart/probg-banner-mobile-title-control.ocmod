@@ -6,7 +6,7 @@ English documentation: [README_EN.md](README_EN.md)
 
 ## Версия
 
-Текуща версия: **1.0.1**
+Текуща версия: **1.0.3**
 
 Историята на промените по версии се поддържа в [CHANGELOG.md](CHANGELOG.md).
 

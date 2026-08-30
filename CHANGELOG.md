@@ -13,6 +13,15 @@ Every released version must have its own changelog entry. Versions follow Semant
 - `MINOR` (`1.0.0` → `1.1.0`) for backward-compatible new functionality;
 - `MAJOR` (`1.x.x` → `2.0.0`) for breaking changes.
 
+## [1.0.3] - 2026-08-30
+
+### fix
+
+- Added detailed manual integration instructions for OpenCart custom themes that override `extension/module/banner.twig`.
+- Added ready-to-use responsive `<picture>` markup using `banner.mobile_image`, `banner.image`, and `banner.alt`.
+- Documented manual `Hide Title` handling for custom themes that render visible banner captions.
+- Added guidance for custom breakpoints, lazy-loading themes, cache refresh, and theme updates that may overwrite manual template changes.
+
 ## [1.0.1] - 2026-08-30
 
 ### fix
