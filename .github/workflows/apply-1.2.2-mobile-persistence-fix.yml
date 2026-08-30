@@ -61,3 +61,5 @@ jobs:
           git add install.xml CHANGELOG.md README.md README_EN.md .github/scripts/
           git commit -m 'fix: persist mobile dimension settings reliably'
           git push origin HEAD:agent/fix-mobile-dimensions-persistence
+
+# retry after structural validation correction
