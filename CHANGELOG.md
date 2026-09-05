@@ -13,6 +13,15 @@ Every released version must have its own changelog entry. Versions follow Semant
 - `MINOR` (`1.0.0` → `1.1.0`) for backward-compatible new functionality;
 - `MAJOR` (`1.x.x` → `2.0.0`) for breaking changes.
 
+## [1.2.3] - 2026-09-05
+
+### fix
+
+- Fixed selected `Mobile Image` and enabled `Hide Title` values not being persisted reliably when creating or editing a Design → Banner entry.
+- Replaced two whitespace-sensitive `banner_image` INSERT matches with one generic `sort_order` insertion that applies to both `addBanner()` and `editBanner()`.
+- Made `getBannerImages()` restoration of `mobile_image` and `hide_title` independent of column alignment/formatting in the standard array.
+- Simplified Design → Banners form restoration so mobile image path, thumbnail, and hide-title state are derived directly from each `$banner_image` row.
+
 ## [1.2.2] - 2026-08-30
 
 ### fix
