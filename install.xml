@@ -2,7 +2,7 @@
 <modification>
   <name>ProBG Banner Mobile &amp; Title Control</name>
   <code>probg_banner_mobile_title_control</code>
-  <version>1.2.2</version>
+  <version>1.2.3</version>
   <author>ProBG</author>
   <link>https://probg.com/</link>
 
@@ -39,16 +39,12 @@
 ]]></add>
     </operation>
     <operation>
-      <search><![CDATA[image = '" .  $this->db->escape($banner_image['image']) . "', sort_order = '" .  (int)$banner_image['sort_order']]]></search>
-      <add position="replace"><![CDATA[image = '" .  $this->db->escape($banner_image['image']) . "', mobile_image = '" . $this->db->escape(isset($banner_image['mobile_image']) ? $banner_image['mobile_image'] : '') . "', hide_title = '" . (int)(isset($banner_image['hide_title']) ? $banner_image['hide_title'] : 0) . "', sort_order = '" .  (int)$banner_image['sort_order']]]></add>
+      <search><![CDATA[, sort_order = '" .]]></search>
+      <add position="replace"><![CDATA[, mobile_image = '" . $this->db->escape(isset($banner_image['mobile_image']) ? $banner_image['mobile_image'] : '') . "', hide_title = '" . (int)(isset($banner_image['hide_title']) ? $banner_image['hide_title'] : 0) . "', sort_order = '" .]]></add>
     </operation>
     <operation>
-      <search><![CDATA[image = '" .  $this->db->escape($banner_image['image']) . "', sort_order = '" . (int)$banner_image['sort_order']]]></search>
-      <add position="replace"><![CDATA[image = '" .  $this->db->escape($banner_image['image']) . "', mobile_image = '" . $this->db->escape(isset($banner_image['mobile_image']) ? $banner_image['mobile_image'] : '') . "', hide_title = '" . (int)(isset($banner_image['hide_title']) ? $banner_image['hide_title'] : 0) . "', sort_order = '" . (int)$banner_image['sort_order']]]></add>
-    </operation>
-    <operation>
-      <search><![CDATA['image'      => $banner_image['image'],]]></search>
-      <add position="after"><![CDATA[
+      <search><![CDATA['sort_order' => $banner_image['sort_order']]]></search>
+      <add position="before"><![CDATA[
 				'mobile_image' => isset($banner_image['mobile_image']) ? $banner_image['mobile_image'] : '',
 				'hide_title'   => isset($banner_image['hide_title']) ? (int)$banner_image['hide_title'] : 0,]]></add>
     </operation>
@@ -62,25 +58,10 @@
 		$this->load->language('extension/module/probg_banner_mobile_fields');]]></add>
     </operation>
     <operation>
-      <search><![CDATA[				} else {
-					$image = '';
-					$thumb = 'no_image.png';
-				}]]></search>
-      <add position="after"><![CDATA[
-
-				if (!empty($banner_image['mobile_image']) && is_file(DIR_IMAGE . $banner_image['mobile_image'])) {
-					$mobile_image = $banner_image['mobile_image'];
-					$mobile_thumb = $banner_image['mobile_image'];
-				} else {
-					$mobile_image = '';
-					$mobile_thumb = 'no_image.png';
-				}]]></add>
-    </operation>
-    <operation>
-      <search><![CDATA['thumb'      => $this->model_tool_image->resize($thumb, 100, 100),]]></search>
-      <add position="after"><![CDATA[
-					'mobile_image' => $mobile_image,
-					'mobile_thumb' => $this->model_tool_image->resize($mobile_thumb, 100, 100),
+      <search><![CDATA['sort_order' => $banner_image['sort_order']]]></search>
+      <add position="before"><![CDATA[
+					'mobile_image' => (!empty($banner_image['mobile_image']) && is_file(DIR_IMAGE . $banner_image['mobile_image'])) ? $banner_image['mobile_image'] : '',
+					'mobile_thumb' => $this->model_tool_image->resize((!empty($banner_image['mobile_image']) && is_file(DIR_IMAGE . $banner_image['mobile_image'])) ? $banner_image['mobile_image'] : 'no_image.png', 100, 100),
 					'hide_title'   => !empty($banner_image['hide_title']) ? 1 : 0,]]></add>
     </operation>
   </file>
