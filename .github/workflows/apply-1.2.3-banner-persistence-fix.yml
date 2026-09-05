@@ -1,0 +1,43 @@
+name: Apply 1.2.3 Banner Persistence Fix
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/apply-1.2.3-banner-persistence-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/fix-banner-extra-fields-persistence
+          fetch-depth: 0
+
+      - name: Apply fix
+        run: python3 .github/scripts/apply-1.2.3-banner-persistence-fix.py
+
+      - name: Validate XML and minimal diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -c "import xml.etree.ElementTree as ET; r=ET.parse('install.xml').getroot(); assert r.findtext('version') == '1.2.3'"
+          git diff --check
+          git diff --stat
+
+      - name: Commit feature branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/scripts/apply-1.2.3-banner-persistence-fix.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add install.xml CHANGELOG.md README.md README_EN.md .github/scripts/
+          git commit -m 'fix: persist banner mobile image and hide title'
+          git push origin HEAD:agent/fix-banner-extra-fields-persistence
