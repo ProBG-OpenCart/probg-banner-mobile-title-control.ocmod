@@ -1,0 +1,63 @@
+name: Apply 1.2.4 Frontend Data Fix
+
+on:
+  push:
+    branches:
+      - agent/fix-frontend-banner-data
+    paths:
+      - '.github/workflows/apply-1.2.4-frontend-data-fix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/fix-frontend-banner-data
+          fetch-depth: 0
+
+      - name: Apply fix
+        run: python3 .github/scripts/apply-1.2.4-frontend-data-fix.py
+
+      - name: Validate XML and frontend operations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          root = ET.parse('install.xml').getroot()
+          assert root.findtext('version') == '1.2.4'
+          targets = {
+              'catalog/controller/extension/module/banner.php',
+              'catalog/controller/extension/module/carousel.php',
+              'catalog/controller/extension/module/slideshow.php',
+          }
+          seen = set()
+          for f in root.findall('file'):
+              if f.get('path') not in targets:
+                  continue
+              searches = [(op.findtext('search') or '').strip() for op in f.findall('operation')]
+              assert "'title' => $result['title']," in searches
+              assert "'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])" in searches
+              seen.add(f.get('path'))
+          assert seen == targets
+          print('Frontend operations validated for Banner, Carousel and Slideshow')
+          PY
+          git diff --check
+
+      - name: Commit clean feature
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/scripts/apply-1.2.4-frontend-data-fix.py
+          rm -f .github/workflows/apply-1.2.4-frontend-data-fix.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add install.xml CHANGELOG.md README.md README_EN.md .github/scripts/ .github/workflows/
+          git commit -m 'fix: expose mobile banner data to custom themes'
+          git push origin HEAD:agent/fix-frontend-banner-data
