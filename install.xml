@@ -2,7 +2,7 @@
 <modification>
   <name>ProBG Banner Mobile &amp; Title Control</name>
   <code>probg_banner_mobile_title_control</code>
-  <version>1.2.3</version>
+  <version>1.2.4</version>
   <author>ProBG</author>
   <link>https://probg.com/</link>
 
@@ -364,14 +364,14 @@
 ]]></add>
     </operation>
     <operation>
-      <search><![CDATA[					'title' => $result['title'],
-					'link'  => $result['link'],
-					'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])]]></search>
-      <add position="replace"><![CDATA[					'title'        => !empty($result['hide_title']) ? '' : $result['title'],
-					'alt'          => $result['title'],
-					'hide_title'   => !empty($result['hide_title']) ? 1 : 0,
-					'link'         => $result['link'],
-					'image'        => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']),
+      <search><![CDATA['title' => $result['title'],]]></search>
+      <add position="replace"><![CDATA['title'      => !empty($result['hide_title']) ? '' : $result['title'],
+					'alt'        => $result['title'],
+					'hide_title' => !empty($result['hide_title']) ? 1 : 0,]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA['image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])]]></search>
+      <add position="replace"><![CDATA['image'        => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']),
 					'mobile_image' => $mobile_image]]></add>
     </operation>
   </file>
@@ -411,14 +411,14 @@
 ]]></add>
     </operation>
     <operation>
-      <search><![CDATA[					'title' => $result['title'],
-					'link'  => $result['link'],
-					'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])]]></search>
-      <add position="replace"><![CDATA[					'title'        => !empty($result['hide_title']) ? '' : $result['title'],
-					'alt'          => $result['title'],
-					'hide_title'   => !empty($result['hide_title']) ? 1 : 0,
-					'link'         => $result['link'],
-					'image'        => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']),
+      <search><![CDATA['title' => $result['title'],]]></search>
+      <add position="replace"><![CDATA['title'      => !empty($result['hide_title']) ? '' : $result['title'],
+					'alt'        => $result['title'],
+					'hide_title' => !empty($result['hide_title']) ? 1 : 0,]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA['image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])]]></search>
+      <add position="replace"><![CDATA['image'        => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']),
 					'mobile_image' => $mobile_image]]></add>
     </operation>
   </file>
@@ -458,14 +458,14 @@
 ]]></add>
     </operation>
     <operation>
-      <search><![CDATA[					'title' => $result['title'],
-					'link'  => $result['link'],
-					'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])]]></search>
-      <add position="replace"><![CDATA[					'title'        => !empty($result['hide_title']) ? '' : $result['title'],
-					'alt'          => $result['title'],
-					'hide_title'   => !empty($result['hide_title']) ? 1 : 0,
-					'link'         => $result['link'],
-					'image'        => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']),
+      <search><![CDATA['title' => $result['title'],]]></search>
+      <add position="replace"><![CDATA['title'      => !empty($result['hide_title']) ? '' : $result['title'],
+					'alt'        => $result['title'],
+					'hide_title' => !empty($result['hide_title']) ? 1 : 0,]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA['image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'])]]></search>
+      <add position="replace"><![CDATA['image'        => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']),
 					'mobile_image' => $mobile_image]]></add>
     </operation>
   </file>

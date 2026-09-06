@@ -13,6 +13,15 @@ Every released version must have its own changelog entry. Versions follow Semant
 - `MINOR` (`1.0.0` → `1.1.0`) for backward-compatible new functionality;
 - `MAJOR` (`1.x.x` → `2.0.0`) for breaking changes.
 
+## [1.2.4] - 2026-09-06
+
+### fix
+
+- Fixed `mobile_image`, `hide_title`, and `alt` not reaching custom Banner/Carousel/Slideshow Twig templates when another theme or OCMOD changes the standard frontend banner array formatting.
+- Replaced the fragile three-line `title/link/image` array replacement with independent `title` and `image` operations.
+- Custom themes can now reliably use `banner.mobile_image`, `banner.hide_title`, and `banner.alt` without requiring the default OpenCart Twig template.
+- Applied the same frontend data fix to Banner, Carousel, and Slideshow.
+
 ## [1.2.3] - 2026-09-05
 
 ### fix
